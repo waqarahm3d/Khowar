@@ -1,0 +1,271 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: pakistani-music-db
+    environment:
+      POSTGRES_DB: pakistani_music_app
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --locale=C"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./deployment/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - pakistani-music-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: pakistani-music-redis
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-}
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - pakistani-music-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Admin Backend API
+  admin-backend:
+    build:
+      context: ./admin-backend
+      dockerfile: Dockerfile
+    container_name: pakistani-music-backend
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      DATABASE_URL: postgresql://postgres:password@postgres:5432/pakistani_music_app
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+      JWT_SECRET: ${JWT_SECRET}
+      DEFAULT_LANGUAGE: urdu
+      DEFAULT_THEME: pakistan-green
+      FEATURE_CULTURAL_THEMES: true
+      FEATURE_MULTI_LANGUAGE: true
+    volumes:
+      - ./admin-backend:/app
+      - /app/node_modules
+      - uploads_data:/app/uploads
+    ports:
+      - "3000:3000"
+    networks:
+      - pakistani-music-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Web Admin Dashboard
+  web-admin:
+    build:
+      context: ./web-admin
+      dockerfile: Dockerfile
+    container_name: pakistani-music-admin
+    environment:
+      REACT_APP_API_URL: http://localhost:3000
+      REACT_APP_CULTURAL_THEME: pakistan-green
+      REACT_APP_DEFAULT_LANGUAGE: urdu
+      REACT_APP_ENABLE_URDU_SUPPORT: true
+    volumes:
+      - ./web-admin:/app
+      - /app/node_modules
+    ports:
+      - "3001:3000"
+    networks:
+      - pakistani-music-network
+    depends_on:
+      - admin-backend
+    restart: unless-stopped
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: pakistani-music-nginx
+    volumes:
+      - ./deployment/nginx.conf:/etc/nginx/nginx.conf
+      - ./deployment/ssl:/etc/nginx/ssl
+      - uploads_data:/var/www/uploads
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - pakistani-music-network
+    depends_on:
+      - admin-backend
+      - web-admin
+    restart: unless-stopped
+
+  # MinIO for S3-compatible storage (development)
+  minio:
+    image: minio/minio:latest
+    container_name: pakistani-music-minio
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin123
+      MINIO_DOMAIN: localhost
+    volumes:
+      - minio_data:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    networks:
+      - pakistani-music-network
+    command: server /data --console-address ":9001"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  # Elasticsearch for search functionality
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    container_name: pakistani-music-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.security.enabled=false
+      - xpack.security.enrollment.enabled=false
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    networks:
+      - pakistani-music-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Kibana for Elasticsearch management
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.11.0
+    container_name: pakistani-music-kibana
+    environment:
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    networks:
+      - pakistani-music-network
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # Prometheus for monitoring
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: pakistani-music-prometheus
+    volumes:
+      - ./deployment/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - pakistani-music-network
+    restart: unless-stopped
+
+  # Grafana for monitoring dashboards
+  grafana:
+    image: grafana/grafana:latest
+    container_name: pakistani-music-grafana
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin123
+      GF_INSTALL_PLUGINS: grafana-piechart-panel
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./deployment/grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./deployment/grafana/datasources:/etc/grafana/provisioning/datasources
+    ports:
+      - "3002:3000"
+    networks:
+      - pakistani-music-network
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
+  # Mailhog for email testing in development
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: pakistani-music-mailhog
+    ports:
+      - "1025:1025"  # SMTP
+      - "8025:8025"  # Web UI
+    networks:
+      - pakistani-music-network
+    restart: unless-stopped
+
+  # File processing worker for audio metadata extraction
+  audio-processor:
+    build:
+      context: ./admin-backend
+      dockerfile: Dockerfile.worker
+    container_name: pakistani-music-audio-processor
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://postgres:password@postgres:5432/pakistani_music_app
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+      WORKER_TYPE: audio-processor
+    volumes:
+      - ./admin-backend:/app
+      - /app/node_modules
+      - uploads_data:/app/uploads
+    networks:
+      - pakistani-music-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+networks:
+  pakistani-music-network:
+    driver: bridge
+    name: pakistani-music-network
+
+volumes:
+  postgres_data:
+    name: pakistani-music-postgres-data
+  redis_data:
+    name: pakistani-music-redis-data
+  minio_data:
+    name: pakistani-music-minio-data
+  elasticsearch_data:
+    name: pakistani-music-elasticsearch-data
+  prometheus_data:
+    name: pakistani-music-prometheus-data
+  grafana_data:
+    name: pakistani-music-grafana-data
+  uploads_data:
+    name: pakistani-music-uploads-data

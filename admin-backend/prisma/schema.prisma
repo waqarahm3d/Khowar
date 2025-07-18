@@ -1,0 +1,370 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User model with Pakistani cultural considerations
+model User {
+  id                String   @id @default(cuid())
+  email             String   @unique
+  username          String   @unique
+  password          String
+  firstName         String
+  lastName          String
+  displayName       String?
+  avatar            String?
+  
+  // Cultural preferences
+  language          String   @default("urdu")
+  theme             String   @default("pakistan-green")
+  region            String?  // e.g., "punjab", "sindh", "kpk", "balochistan"
+  culturalSettings  Json?    // Additional cultural preferences
+  
+  // Account status
+  isActive          Boolean  @default(true)
+  isVerified        Boolean  @default(false)
+  isPremium         Boolean  @default(false)
+  role              UserRole @default(USER)
+  
+  // Timestamps
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  lastLoginAt       DateTime?
+  
+  // Relations
+  playlists         Playlist[]
+  favorites         Favorite[]
+  downloads         Download[]
+  userAnalytics     UserAnalytics[]
+  subscriptions     Subscription[]
+  
+  @@map("users")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  SUPER_ADMIN
+}
+
+// Artist model with Pakistani music focus
+model Artist {
+  id              String   @id @default(cuid())
+  name            String
+  nameUrdu        String?  // Urdu name
+  nameLocal       String?  // Regional language name
+  slug            String   @unique
+  bio             String?
+  bioUrdu         String?
+  avatar          String?
+  coverImage      String?
+  
+  // Cultural information
+  origin          String?  // City/region of origin
+  genres          String[] // Pakistani music genres
+  languages       String[] // Languages they sing in
+  
+  // Social media
+  socialLinks     Json?
+  
+  // Status
+  isActive        Boolean  @default(true)
+  isVerified      Boolean  @default(false)
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  songs           Song[]
+  albums          Album[]
+  
+  @@map("artists")
+}
+
+// Album model
+model Album {
+  id              String   @id @default(cuid())
+  title           String
+  titleUrdu       String?
+  titleLocal      String?
+  slug            String   @unique
+  description     String?
+  coverImage      String?
+  
+  // Album details
+  releaseDate     DateTime?
+  genre           String?
+  language        String   @default("urdu")
+  recordLabel     String?
+  
+  // Cultural tags
+  culturalTags    String[] // e.g., ["qawwali", "sufi", "folk", "classical"]
+  festivalTags    String[] // e.g., ["eid", "basant", "wedding"]
+  
+  // Status
+  isActive        Boolean  @default(true)
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  artistId        String
+  artist          Artist   @relation(fields: [artistId], references: [id])
+  songs           Song[]
+  
+  @@map("albums")
+}
+
+// Song model with comprehensive metadata
+model Song {
+  id              String   @id @default(cuid())
+  title           String
+  titleUrdu       String?
+  titleLocal      String?
+  slug            String   @unique
+  
+  // Audio file information
+  fileName        String
+  fileSize        Int
+  duration        Int      // in seconds
+  bitrate         Int?
+  format          String   // mp3, flac, etc.
+  
+  // Storage information
+  storageProvider String   // aws, wasabi, backblaze, gdrive
+  storageKey      String   // file key/path in storage
+  storageUrl      String?  // CDN URL if available
+  
+  // Metadata
+  genre           String?
+  language        String   @default("urdu")
+  lyrics          String?
+  lyricsUrdu      String?
+  
+  // Cultural metadata
+  culturalTags    String[] // e.g., ["qawwali", "ghazal", "folk"]
+  mood            String?  // e.g., "romantic", "spiritual", "celebratory"
+  occasion        String[] // e.g., ["wedding", "eid", "general"]
+  
+  // Technical metadata
+  isrc            String?  // International Standard Recording Code
+  bpm             Int?     // Beats per minute
+  key             String?  // Musical key
+  
+  // Status and quality
+  isActive        Boolean  @default(true)
+  quality         String   @default("standard") // standard, high, lossless
+  
+  // Analytics
+  playCount       Int      @default(0)
+  downloadCount   Int      @default(0)
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  artistId        String
+  artist          Artist   @relation(fields: [artistId], references: [id])
+  albumId         String?
+  album           Album?   @relation(fields: [albumId], references: [id])
+  
+  // User interactions
+  favorites       Favorite[]
+  downloads       Download[]
+  playlistSongs   PlaylistSong[]
+  
+  @@map("songs")
+}
+
+// Playlist model
+model Playlist {
+  id              String   @id @default(cuid())
+  title           String
+  titleUrdu       String?
+  description     String?
+  coverImage      String?
+  
+  // Playlist settings
+  isPublic        Boolean  @default(false)
+  isCollaborative Boolean  @default(false)
+  
+  // Cultural tags
+  culturalTags    String[]
+  mood            String?
+  occasion        String[]
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+  songs           PlaylistSong[]
+  
+  @@map("playlists")
+}
+
+// Junction table for playlist songs
+model PlaylistSong {
+  id          String   @id @default(cuid())
+  position    Int
+  addedAt     DateTime @default(now())
+  
+  // Relations
+  playlistId  String
+  playlist    Playlist @relation(fields: [playlistId], references: [id])
+  songId      String
+  song        Song     @relation(fields: [songId], references: [id])
+  
+  @@unique([playlistId, songId])
+  @@map("playlist_songs")
+}
+
+// Favorites model
+model Favorite {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  
+  // Relations
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  songId    String
+  song      Song     @relation(fields: [songId], references: [id])
+  
+  @@unique([userId, songId])
+  @@map("favorites")
+}
+
+// Downloads model for offline listening
+model Download {
+  id              String      @id @default(cuid())
+  status          DownloadStatus @default(PENDING)
+  downloadedAt    DateTime?
+  expiresAt       DateTime?   // For premium users
+  fileSize        Int?
+  
+  // Relations
+  userId          String
+  user            User        @relation(fields: [userId], references: [id])
+  songId          String
+  song            Song        @relation(fields: [songId], references: [id])
+  
+  @@unique([userId, songId])
+  @@map("downloads")
+}
+
+enum DownloadStatus {
+  PENDING
+  DOWNLOADING
+  COMPLETED
+  FAILED
+  EXPIRED
+}
+
+// User analytics for tracking behavior
+model UserAnalytics {
+  id            String   @id @default(cuid())
+  eventType     String   // play, download, favorite, share, etc.
+  eventData     Json?    // Additional event data
+  timestamp     DateTime @default(now())
+  
+  // Device and location info
+  deviceType    String?  // mobile, web, desktop
+  platform      String?  // ios, android, web
+  country       String?
+  city          String?
+  
+  // Relations
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  
+  @@map("user_analytics")
+}
+
+// Subscription model for premium features
+model Subscription {
+  id              String            @id @default(cuid())
+  type            SubscriptionType
+  status          SubscriptionStatus @default(ACTIVE)
+  startDate       DateTime          @default(now())
+  endDate         DateTime?
+  
+  // Payment info
+  paymentMethod   String?
+  paymentId       String?
+  amount          Float?
+  currency        String            @default("PKR")
+  
+  // Relations
+  userId          String
+  user            User              @relation(fields: [userId], references: [id])
+  
+  @@map("subscriptions")
+}
+
+enum SubscriptionType {
+  FREE
+  PREMIUM_MONTHLY
+  PREMIUM_YEARLY
+  PREMIUM_LIFETIME
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  EXPIRED
+  CANCELLED
+  PENDING
+}
+
+// System settings for cultural configuration
+model SystemSettings {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       Json
+  description String?
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("system_settings")
+}
+
+// Cultural events and festivals
+model CulturalEvent {
+  id            String   @id @default(cuid())
+  name          String
+  nameUrdu      String?
+  description   String?
+  startDate     DateTime
+  endDate       DateTime?
+  
+  // Event details
+  type          String   // eid, basant, wedding, etc.
+  region        String?  // specific to region
+  isRecurring   Boolean  @default(false)
+  
+  // Associated content
+  playlistIds   String[] // Featured playlists for this event
+  songIds       String[] // Featured songs for this event
+  
+  // Status
+  isActive      Boolean  @default(true)
+  
+  // Timestamps
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  @@map("cultural_events")
+}
