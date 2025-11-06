@@ -19,9 +19,23 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: [true, 'Password is required'],
     minlength: 6,
     select: false
+  },
+  authProvider: {
+    type: String,
+    enum: ['local', 'google', 'facebook'],
+    default: 'local'
+  },
+  authProviderId: {
+    type: String
+  },
+  emailVerified: {
+    type: Boolean,
+    default: false
+  },
+  verifiedAt: {
+    type: Date
   },
   displayName: {
     type: String,
@@ -55,14 +69,23 @@ const userSchema = new mongoose.Schema({
   followedPlaylists: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Playlist'
-  }]
+  }],
+  artistVerificationStatus: {
+    type: String,
+    enum: ['none', 'pending', 'approved', 'rejected'],
+    default: 'none'
+  },
+  artistProfile: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Artist'
+  }
 }, {
   timestamps: true
 });
 
-// Hash password before saving
+// Hash password before saving (only for local auth)
 userSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) {
+  if (!this.isModified('password') || !this.password) {
     return next();
   }
   const salt = await bcrypt.genSalt(10);

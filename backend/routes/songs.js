@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const songController = require('../controllers/songController');
+const commentController = require('../controllers/commentController');
 const { protect, authorize, optionalAuth } = require('../middleware/auth');
 
 router.get('/', optionalAuth, songController.getAllSongs);
@@ -9,6 +10,10 @@ router.get('/trending', optionalAuth, songController.getTrendingSongs);
 router.get('/recent', optionalAuth, songController.getRecentSongs);
 router.get('/:id', optionalAuth, songController.getSong);
 router.get('/:id/stream', songController.streamSong);
+
+// Comment routes for songs
+router.get('/:songId/comments', commentController.getComments);
+router.post('/:songId/comments', protect, commentController.createComment);
 
 // Protected routes
 router.post('/:id/like', protect, songController.likeSong);

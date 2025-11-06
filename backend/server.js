@@ -5,18 +5,23 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
 const path = require('path');
+const session = require('express-session');
+const passport = require('./config/passport');
 
 // Load environment variables
 dotenv.config();
 
 // Import routes
-const authRoutes = require('./routes/auth');
+const authRoutes = require('./routes/authEnhanced');
 const songRoutes = require('./routes/songs');
 const artistRoutes = require('./routes/artists');
 const albumRoutes = require('./routes/albums');
 const playlistRoutes = require('./routes/playlists');
 const userRoutes = require('./routes/users');
 const adminRoutes = require('./routes/admin');
+const commentRoutes = require('./routes/comments');
+const artistVerificationRoutes = require('./routes/artistVerification');
+const socialRoutes = require('./routes/social');
 
 const app = express();
 
@@ -29,6 +34,21 @@ app.use(cors({
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Session middleware (for OAuth)
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'your-session-secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
+}));
+
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Serve static files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -46,6 +66,9 @@ app.use('/api/albums', albumRoutes);
 app.use('/api/playlists', playlistRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/comments', commentRoutes);
+app.use('/api/artist-verification', artistVerificationRoutes);
+app.use('/api/social', socialRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
