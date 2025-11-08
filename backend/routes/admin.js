@@ -9,7 +9,9 @@ router.use(protect, authorize('admin'));
 
 router.get('/stats', adminController.getStats);
 router.get('/users', adminController.getAllUsers);
+router.post('/users', adminController.createUser);
 router.put('/users/:id', adminController.updateUser);
+router.put('/users/:id/password', adminController.changePassword);
 router.delete('/users/:id', adminController.deleteUser);
 
 // File upload

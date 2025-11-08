@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import { getArtists, deleteArtist } from '../services/api'
-import { Plus, Trash2 } from 'lucide-react'
+import { Plus, Trash2, Edit } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 export default function Artists() {
@@ -54,12 +54,20 @@ export default function Artists() {
                 <span className="text-sm text-gray-500">
                   {artist.followers} followers
                 </span>
-                <button
-                  onClick={() => deleteMutation.mutate(artist._id)}
-                  className="text-red-600 hover:text-red-800"
-                >
-                  <Trash2 className="w-5 h-5" />
-                </button>
+                <div className="flex items-center space-x-2">
+                  <Link
+                    to={`/artists/edit/${artist._id}`}
+                    className="text-blue-600 hover:text-blue-800"
+                  >
+                    <Edit className="w-5 h-5" />
+                  </Link>
+                  <button
+                    onClick={() => deleteMutation.mutate(artist._id)}
+                    className="text-red-600 hover:text-red-800"
+                  >
+                    <Trash2 className="w-5 h-5" />
+                  </button>
+                </div>
               </div>
             </div>
           ))}

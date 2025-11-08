@@ -84,12 +84,20 @@ export default function Songs() {
                   </td>
                   <td className="px-6 py-4">{song.playCount}</td>
                   <td className="px-6 py-4 text-right">
-                    <button
-                      onClick={() => deleteMutation.mutate(song._id)}
-                      className="text-red-600 hover:text-red-800"
-                    >
-                      <Trash2 className="w-5 h-5" />
-                    </button>
+                    <div className="flex items-center justify-end space-x-2">
+                      <Link
+                        to={`/songs/edit/${song._id}`}
+                        className="text-blue-600 hover:text-blue-800"
+                      >
+                        <Edit className="w-5 h-5" />
+                      </Link>
+                      <button
+                        onClick={() => deleteMutation.mutate(song._id)}
+                        className="text-red-600 hover:text-red-800"
+                      >
+                        <Trash2 className="w-5 h-5" />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

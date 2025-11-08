@@ -127,6 +127,54 @@ exports.updateUser = async (req, res) => {
   }
 };
 
+// @desc    Create user
+// @route   POST /api/admin/users
+// @access  Private/Admin
+exports.createUser = async (req, res) => {
+  try {
+    const { username, email, password, displayName, role, isPremium, profileImage } = req.body;
+
+    // Check if user already exists
+    const existingUser = await User.findOne({
+      $or: [{ email }, { username }]
+    });
+
+    if (existingUser) {
+      return res.status(400).json({
+        success: false,
+        message: 'User with this email or username already exists'
+      });
+    }
+
+    // Create user
+    const user = await User.create({
+      username,
+      email,
+      password,
+      displayName,
+      role: role || 'user',
+      isPremium: isPremium || false,
+      profileImage: profileImage || 'https://via.placeholder.com/150',
+      emailVerified: true, // Admin-created users are auto-verified
+      authProvider: 'local'
+    });
+
+    // Remove password from response
+    user.password = undefined;
+
+    res.status(201).json({
+      success: true,
+      data: user,
+      message: 'User created successfully'
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
 // @desc    Delete user
 // @route   DELETE /api/admin/users/:id
 // @access  Private/Admin
@@ -154,6 +202,45 @@ exports.deleteUser = async (req, res) => {
     res.json({
       success: true,
       message: 'User deleted successfully'
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+// @desc    Change user password
+// @route   PUT /api/admin/users/:id/password
+// @access  Private/Admin
+exports.changePassword = async (req, res) => {
+  try {
+    const { newPassword } = req.body;
+
+    if (!newPassword || newPassword.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password must be at least 6 characters long'
+      });
+    }
+
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    // Update password (will be hashed by pre-save hook)
+    user.password = newPassword;
+    await user.save();
+
+    res.json({
+      success: true,
+      message: 'Password changed successfully'
     });
   } catch (error) {
     res.status(500).json({

@@ -35,7 +35,9 @@ export const getMe = () => api.get('/auth/me')
 // Admin Stats
 export const getStats = () => api.get('/admin/stats')
 export const getAllUsers = (params) => api.get('/admin/users', { params })
+export const createUser = (data) => api.post('/admin/users', data)
 export const updateUser = (id, data) => api.put(`/admin/users/${id}`, data)
+export const changePassword = (id, data) => api.put(`/admin/users/${id}/password`, data)
 export const deleteUser = (id) => api.delete(`/admin/users/${id}`)
 
 // Songs
