@@ -260,6 +260,7 @@ exports.getSettings = async (req, res) => {
       CLOUDFLARE_SECRET_ACCESS_KEY: process.env.CLOUDFLARE_SECRET_ACCESS_KEY ? '***' : '',
       CLOUDFLARE_BUCKET_NAME: process.env.CLOUDFLARE_BUCKET_NAME || '',
       CLOUDFLARE_ACCOUNT_ID: process.env.CLOUDFLARE_ACCOUNT_ID || '',
+      CLOUDFLARE_ENDPOINT: process.env.CLOUDFLARE_ENDPOINT || '',
 
       // Email
       EMAIL_HOST: process.env.EMAIL_HOST || 'smtp.gmail.com',
@@ -345,7 +346,7 @@ exports.updateSettings = async (req, res) => {
       'AWS S3': ['AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY', 'AWS_BUCKET_NAME', 'AWS_REGION'],
       'Wasabi S3': ['WASABI_ACCESS_KEY_ID', 'WASABI_SECRET_ACCESS_KEY', 'WASABI_BUCKET_NAME', 'WASABI_REGION', 'WASABI_ENDPOINT'],
       'Backblaze B2': ['BACKBLAZE_KEY_ID', 'BACKBLAZE_APPLICATION_KEY', 'BACKBLAZE_BUCKET_NAME', 'BACKBLAZE_REGION', 'BACKBLAZE_ENDPOINT'],
-      'Cloudflare R2': ['CLOUDFLARE_ACCESS_KEY_ID', 'CLOUDFLARE_SECRET_ACCESS_KEY', 'CLOUDFLARE_BUCKET_NAME', 'CLOUDFLARE_ACCOUNT_ID'],
+      'Cloudflare R2': ['CLOUDFLARE_ACCESS_KEY_ID', 'CLOUDFLARE_SECRET_ACCESS_KEY', 'CLOUDFLARE_BUCKET_NAME', 'CLOUDFLARE_ACCOUNT_ID', 'CLOUDFLARE_ENDPOINT'],
       'Email Configuration': ['EMAIL_HOST', 'EMAIL_PORT', 'EMAIL_SECURE', 'EMAIL_USER', 'EMAIL_PASSWORD', 'EMAIL_FROM'],
       'OAuth': ['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET', 'GOOGLE_CALLBACK_URL', 'FACEBOOK_APP_ID', 'FACEBOOK_APP_SECRET', 'FACEBOOK_CALLBACK_URL'],
       'Client URLs': ['CLIENT_URL', 'ADMIN_URL'],
@@ -366,11 +367,29 @@ exports.updateSettings = async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Settings updated successfully. Please restart the backend to apply changes.',
+      message: 'Settings updated successfully. Backend will restart automatically in 3 seconds...',
       data: {
         updated: Object.keys(req.body).length
       }
     });
+
+    // Auto-restart backend after 3 seconds (gives time for response to be sent)
+    setTimeout(() => {
+      try {
+        const { exec } = require('child_process');
+        exec('pm2 restart voice-of-chitral-backend', (error, stdout, stderr) => {
+          if (error) {
+            console.error('Auto-restart failed:', error);
+            console.log('Please manually restart with: pm2 restart voice-of-chitral-backend');
+          } else {
+            console.log('✅ Backend restarted automatically');
+            console.log(stdout);
+          }
+        });
+      } catch (error) {
+        console.error('Auto-restart error:', error.message);
+      }
+    }, 3000);
   } catch (error) {
     res.status(500).json({
       success: false,

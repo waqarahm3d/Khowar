@@ -325,6 +325,148 @@ export default function Settings() {
                   </div>
                 </>
               )}
+
+              {settings.STORAGE_PROVIDER === 'backblaze' && (
+                <>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Backblaze Key ID
+                      </label>
+                      <input
+                        type="text"
+                        value={settings.BACKBLAZE_KEY_ID}
+                        onChange={(e) => handleChange('BACKBLAZE_KEY_ID', e.target.value)}
+                        className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Application Key
+                      </label>
+                      <input
+                        type="password"
+                        value={settings.BACKBLAZE_APPLICATION_KEY}
+                        onChange={(e) => handleChange('BACKBLAZE_APPLICATION_KEY', e.target.value)}
+                        className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Bucket Name
+                      </label>
+                      <input
+                        type="text"
+                        value={settings.BACKBLAZE_BUCKET_NAME}
+                        onChange={(e) => handleChange('BACKBLAZE_BUCKET_NAME', e.target.value)}
+                        className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Region
+                      </label>
+                      <input
+                        type="text"
+                        value={settings.BACKBLAZE_REGION}
+                        onChange={(e) => handleChange('BACKBLAZE_REGION', e.target.value)}
+                        className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500"
+                        placeholder="us-west-000"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Endpoint
+                    </label>
+                    <input
+                      type="text"
+                      value={settings.BACKBLAZE_ENDPOINT}
+                      onChange={(e) => handleChange('BACKBLAZE_ENDPOINT', e.target.value)}
+                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500"
+                      placeholder="https://s3.us-west-000.backblazeb2.com"
+                    />
+                  </div>
+                </>
+              )}
+
+              {settings.STORAGE_PROVIDER === 'cloudflare' && (
+                <>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Access Key ID
+                      </label>
+                      <input
+                        type="text"
+                        value={settings.CLOUDFLARE_ACCESS_KEY_ID}
+                        onChange={(e) => handleChange('CLOUDFLARE_ACCESS_KEY_ID', e.target.value)}
+                        className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Secret Access Key
+                      </label>
+                      <input
+                        type="password"
+                        value={settings.CLOUDFLARE_SECRET_ACCESS_KEY}
+                        onChange={(e) => handleChange('CLOUDFLARE_SECRET_ACCESS_KEY', e.target.value)}
+                        className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Bucket Name
+                      </label>
+                      <input
+                        type="text"
+                        value={settings.CLOUDFLARE_BUCKET_NAME}
+                        onChange={(e) => handleChange('CLOUDFLARE_BUCKET_NAME', e.target.value)}
+                        className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Account ID
+                      </label>
+                      <input
+                        type="text"
+                        value={settings.CLOUDFLARE_ACCOUNT_ID}
+                        onChange={(e) => handleChange('CLOUDFLARE_ACCOUNT_ID', e.target.value)}
+                        className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Endpoint URL
+                    </label>
+                    <input
+                      type="text"
+                      value={settings.CLOUDFLARE_ENDPOINT || ''}
+                      onChange={(e) => handleChange('CLOUDFLARE_ENDPOINT', e.target.value)}
+                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500"
+                      placeholder="https://<account_id>.r2.cloudflarestorage.com"
+                    />
+                    <p className="text-sm text-gray-500 mt-1">
+                      Optional: Custom endpoint URL for Cloudflare R2
+                    </p>
+                  </div>
+                </>
+              )}
             </div>
           )}
 
@@ -375,15 +517,18 @@ export default function Settings() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email User
+                  Email User / API Key
                 </label>
                 <input
-                  type="email"
+                  type="text"
                   value={settings.EMAIL_USER}
                   onChange={(e) => handleChange('EMAIL_USER', e.target.value)}
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500"
-                  placeholder="your-email@gmail.com"
+                  placeholder="your-email@gmail.com or emailapikey"
                 />
+                <p className="text-sm text-gray-500 mt-1">
+                  For ZeptoMail, use "emailapikey". For Gmail, use your email address.
+                </p>
               </div>
 
               <div>
