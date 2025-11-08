@@ -16,6 +16,7 @@ import EditArtist from './pages/EditArtist'
 import CreateAlbum from './pages/CreateAlbum'
 import EditAlbum from './pages/EditAlbum'
 import Settings from './pages/Settings'
+import YouTubeImport from './pages/YouTubeImport'
 
 function PrivateRoute({ children }) {
   const { token } = useAuthStore()
@@ -47,6 +48,7 @@ function App() {
         <Route path="users" element={<Users />} />
         <Route path="users/create" element={<CreateUser />} />
         <Route path="users/edit/:id" element={<EditUser />} />
+        <Route path="youtube-import" element={<YouTubeImport />} />
         <Route path="settings" element={<Settings />} />
       </Route>
     </Routes>

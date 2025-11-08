@@ -56,7 +56,24 @@ const songSchema = new mongoose.Schema({
   featuredArtists: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Artist'
-  }]
+  }],
+  // YouTube import fields
+  youtubeUrl: {
+    type: String
+  },
+  imported: {
+    type: Boolean,
+    default: false
+  },
+  importDate: {
+    type: Date
+  },
+  tags: [{
+    type: String
+  }],
+  releaseYear: {
+    type: Number
+  }
 }, {
   timestamps: true
 });

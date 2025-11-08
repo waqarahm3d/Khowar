@@ -22,6 +22,7 @@ const adminRoutes = require('./routes/admin');
 const commentRoutes = require('./routes/comments');
 const artistVerificationRoutes = require('./routes/artistVerification');
 const socialRoutes = require('./routes/social');
+const youtubeImportRoutes = require('./routes/youtubeImport');
 
 const app = express();
 
@@ -69,6 +70,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api/artist-verification', artistVerificationRoutes);
 app.use('/api/social', socialRoutes);
+app.use('/api/youtube-import', youtubeImportRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
