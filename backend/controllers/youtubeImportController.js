@@ -474,4 +474,5 @@ async function processImport(jobId) {
   }
 }
 
-module.exports = { processImport };
+// Export helper function for internal use
+exports.processImport = processImport;
