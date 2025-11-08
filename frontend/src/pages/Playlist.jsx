@@ -1,10 +1,13 @@
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useQuery, useMutation, useQueryClient } from '@antml:invoke>
-<parameter name="toast">
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { PencilIcon } from '@heroicons/react/24/outline';
+import { toast } from 'react-hot-toast';
 import { playlistsAPI } from '../api/playlists';
 import SongList from '../components/library/SongList';
 import Loading from '../components/common/Loading';
 import Button from '../components/common/Button';
+import EditPlaylistModal from '../components/modals/EditPlaylistModal';
 import useAuthStore from '../store/authStore';
 import usePlayerStore from '../store/playerStore';
 import useQueueStore from '../store/queueStore';
@@ -15,6 +18,7 @@ export default function Playlist() {
   const { isAuthenticated, user } = useAuthStore();
   const { playSong } = usePlayerStore();
   const { setQueue } = useQueueStore();
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const { data: playlist, isLoading } = useQuery({
     queryKey: ['playlist', id],
@@ -100,6 +104,15 @@ export default function Playlist() {
               {isFollowing ? 'Following' : 'Follow'}
             </Button>
           )}
+          {isAuthenticated && isOwner && (
+            <Button
+              onClick={() => setIsEditModalOpen(true)}
+              className="border-2 border-white/20 hover:border-white/40 text-white font-semibold px-4 py-3 rounded-full flex items-center gap-2"
+            >
+              <PencilIcon className="w-5 h-5" />
+              Edit
+            </Button>
+          )}
         </div>
       </div>
 
@@ -110,6 +123,15 @@ export default function Playlist() {
           <p className="text-gray-400 text-center py-12">No songs in this playlist</p>
         )}
       </div>
+
+      {/* Edit Playlist Modal */}
+      {isOwner && (
+        <EditPlaylistModal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          playlist={playlistData}
+        />
+      )}
     </div>
   );
 }

@@ -42,4 +42,10 @@ export const authAPI = {
     const response = await client.post('/auth/login-otp', data);
     return response.data;
   },
+
+  // Get play history
+  getPlayHistory: async (limit = 50) => {
+    const response = await client.get(`/users/play-history?limit=${limit}`);
+    return response.data;
+  },
 };

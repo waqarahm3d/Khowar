@@ -3,8 +3,12 @@ import Sidebar from '../navigation/Sidebar';
 import Header from '../navigation/Header';
 import Player from '../player/Player';
 import MobileNav from '../navigation/MobileNav';
+import Queue from '../player/Queue';
+import useUIStore from '../../store/uiStore';
 
 export default function MainLayout() {
+  const { isQueueOpen } = useUIStore();
+
   return (
     <div className="h-screen flex flex-col bg-black">
       <div className="flex-1 flex overflow-hidden">
@@ -21,6 +25,9 @@ export default function MainLayout() {
             <Outlet />
           </main>
         </div>
+
+        {/* Queue Sidebar */}
+        <Queue />
       </div>
 
       {/* Player */}

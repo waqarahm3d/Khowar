@@ -16,8 +16,10 @@ import Browse from './pages/Browse';
 import Library from './pages/Library';
 import Artist from './pages/Artist';
 import Album from './pages/Album';
+import Song from './pages/Song';
 import Playlist from './pages/Playlist';
 import Profile from './pages/Profile';
+import RecentlyPlayed from './pages/RecentlyPlayed';
 
 // Create Query Client
 const queryClient = new QueryClient({
@@ -88,8 +90,10 @@ function App() {
               <Route path="search" element={<Search />} />
               <Route path="browse" element={<Browse />} />
               <Route path="library" element={<Library />} />
+              <Route path="recently-played" element={<RecentlyPlayed />} />
               <Route path="artist/:id" element={<Artist />} />
               <Route path="album/:id" element={<Album />} />
+              <Route path="song/:id" element={<Song />} />
               <Route path="playlist/:id" element={<Playlist />} />
               <Route path="profile" element={<Profile />} />
             </Route>

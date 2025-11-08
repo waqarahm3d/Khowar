@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react';
+import { QueueListIcon } from '@heroicons/react/24/outline';
 import usePlayerStore from '../../store/playerStore';
 import useQueueStore from '../../store/queueStore';
+import useUIStore from '../../store/uiStore';
 import { getAudioUrl } from '../../utils/formatTime';
 import Controls from './Controls';
 import ProgressBar from './ProgressBar';
@@ -24,6 +26,7 @@ const Player = () => {
   } = usePlayerStore();
 
   const { getNextSong } = useQueueStore();
+  const { toggleQueue, isQueueOpen } = useUIStore();
 
   // Set audio element on mount
   useEffect(() => {
@@ -130,7 +133,18 @@ const Player = () => {
             <div className="flex flex-col gap-2 md:hidden">
               <div className="flex items-center justify-between">
                 <NowPlaying song={currentSong} compact />
-                <Controls compact />
+                <div className="flex items-center gap-2">
+                  <Controls compact />
+                  <button
+                    onClick={toggleQueue}
+                    className={`p-2 rounded-full hover:bg-gray-100 transition ${
+                      isQueueOpen ? 'text-primary-600' : 'text-gray-700'
+                    }`}
+                    title="Queue"
+                  >
+                    <QueueListIcon className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
               <ProgressBar />
             </div>
@@ -148,9 +162,18 @@ const Player = () => {
                 <ProgressBar />
               </div>
 
-              {/* Right: Volume */}
-              <div className="flex-1 flex justify-end">
+              {/* Right: Volume and Queue */}
+              <div className="flex-1 flex justify-end items-center gap-2">
                 <VolumeControl />
+                <button
+                  onClick={toggleQueue}
+                  className={`p-2 rounded-full hover:bg-gray-100 transition ${
+                    isQueueOpen ? 'text-primary-600' : 'text-gray-700'
+                  }`}
+                  title="Queue"
+                >
+                  <QueueListIcon className="w-5 h-5" />
+                </button>
               </div>
             </div>
           </div>

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { HeartIcon, ClockIcon, RectangleStackIcon } from '@heroicons/react/24/solid';
 import { authAPI } from '../api/auth';
@@ -5,6 +6,7 @@ import { playlistsAPI } from '../api/playlists';
 import SongList from '../components/library/SongList';
 import PlaylistCard from '../components/library/PlaylistCard';
 import Loading from '../components/common/Loading';
+import CreatePlaylistModal from '../components/modals/CreatePlaylistModal';
 import useAuthStore from '../store/authStore';
 import usePlayerStore from '../store/playerStore';
 import useQueueStore from '../store/queueStore';
@@ -13,11 +15,12 @@ export default function Library() {
   const { isAuthenticated, user } = useAuthStore();
   const { playSong } = usePlayerStore();
   const { setQueue } = useQueueStore();
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   // Fetch user's playlists
   const { data: playlists, isLoading: loadingPlaylists } = useQuery({
     queryKey: ['playlists', 'user'],
-    queryFn: playlistsAPI.getMyPlaylists,
+    queryFn: playlistsAPI.getMy,
     enabled: isAuthenticated,
   });
 
@@ -70,7 +73,7 @@ export default function Library() {
         </a>
 
         <a
-          href="/library/recent"
+          href="/recently-played"
           className="bg-gradient-to-br from-green-800 to-green-600 rounded-lg p-6 hover:scale-105 transition-transform"
         >
           <ClockIcon className="w-12 h-12 text-white mb-4" />
@@ -93,7 +96,10 @@ export default function Library() {
         <section>
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-white">Your Playlists</h2>
-            <button className="bg-primary-600 hover:bg-primary-700 text-white font-semibold px-4 py-2 rounded-full transition-colors">
+            <button
+              onClick={() => setIsCreateModalOpen(true)}
+              className="bg-primary-600 hover:bg-primary-700 text-white font-semibold px-4 py-2 rounded-full transition-colors"
+            >
               Create Playlist
             </button>
           </div>
@@ -109,11 +115,20 @@ export default function Library() {
       {(!playlists?.data || playlists.data.length === 0) && (
         <div className="text-center py-12">
           <p className="text-gray-400 mb-6">You don't have any playlists yet</p>
-          <button className="bg-primary-600 hover:bg-primary-700 text-white font-semibold px-8 py-3 rounded-full transition-colors">
+          <button
+            onClick={() => setIsCreateModalOpen(true)}
+            className="bg-primary-600 hover:bg-primary-700 text-white font-semibold px-8 py-3 rounded-full transition-colors"
+          >
             Create Your First Playlist
           </button>
         </div>
       )}
+
+      {/* Create Playlist Modal */}
+      <CreatePlaylistModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+      />
     </div>
   );
 }
