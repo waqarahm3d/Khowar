@@ -10,6 +10,7 @@ import Users from './pages/Users'
 import UploadSong from './pages/UploadSong'
 import CreateArtist from './pages/CreateArtist'
 import CreateAlbum from './pages/CreateAlbum'
+import Settings from './pages/Settings'
 
 function PrivateRoute({ children }) {
   const { token } = useAuthStore()
@@ -36,6 +37,7 @@ function App() {
         <Route path="albums" element={<Albums />} />
         <Route path="albums/create" element={<CreateAlbum />} />
         <Route path="users" element={<Users />} />
+        <Route path="settings" element={<Settings />} />
       </Route>
     </Routes>
   )

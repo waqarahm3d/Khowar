@@ -6,6 +6,7 @@ import {
   Mic2,
   Album,
   Users,
+  Settings,
   LogOut,
 } from 'lucide-react'
 
@@ -24,6 +25,7 @@ export default function Layout() {
     { to: '/artists', icon: Mic2, label: 'Artists' },
     { to: '/albums', icon: Album, label: 'Albums' },
     { to: '/users', icon: Users, label: 'Users' },
+    { to: '/settings', icon: Settings, label: 'Settings' },
   ]
 
   return (

@@ -16,4 +16,8 @@ router.delete('/users/:id', adminController.deleteUser);
 router.post('/upload/audio', upload.single('audio'), adminController.uploadAudio);
 router.post('/upload/image', upload.single('image'), adminController.uploadImage);
 
+// Settings
+router.get('/settings', adminController.getSettings);
+router.put('/settings', adminController.updateSettings);
+
 module.exports = router;
