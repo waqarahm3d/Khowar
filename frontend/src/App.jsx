@@ -20,6 +20,11 @@ import Song from './pages/Song';
 import Playlist from './pages/Playlist';
 import Profile from './pages/Profile';
 import RecentlyPlayed from './pages/RecentlyPlayed';
+import Artists from './pages/Artists';
+import Albums from './pages/Albums';
+import LikedSongs from './pages/LikedSongs';
+import Playlists from './pages/Playlists';
+import Settings from './pages/Settings';
 
 // Create Query Client
 const queryClient = new QueryClient({
@@ -82,6 +87,8 @@ function App() {
               <Route index element={<Home />} />
               <Route path="search" element={<Search />} />
               <Route path="browse" element={<Browse />} />
+              <Route path="artists" element={<Artists />} />
+              <Route path="albums" element={<Albums />} />
               <Route path="artist/:id" element={<Artist />} />
               <Route path="album/:id" element={<Album />} />
               <Route path="song/:id" element={<Song />} />
@@ -119,6 +126,30 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="settings"
+                element={
+                  <ProtectedRoute>
+                    <Settings />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="library/liked"
+                element={
+                  <ProtectedRoute>
+                    <LikedSongs />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="library/playlists"
+                element={
+                  <ProtectedRoute>
+                    <Playlists />
+                  </ProtectedRoute>
+                }
+              />
             </Route>
 
             {/* Catch all - redirect to home */}
@@ -131,14 +162,14 @@ function App() {
             toastOptions={{
               duration: 3000,
               style: {
-                background: '#1f2937',
-                color: '#fff',
+                background: '#181818',
+                color: '#FFFFFF',
                 borderRadius: '8px',
               },
               success: {
                 iconTheme: {
-                  primary: '#10b981',
-                  secondary: '#fff',
+                  primary: '#1DB954',
+                  secondary: '#000',
                 },
               },
               error: {

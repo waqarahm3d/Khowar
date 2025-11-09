@@ -38,7 +38,7 @@ const Sidebar = () => {
     ? [
         { to: '/library/playlists', label: 'Playlists', icon: RectangleStackIcon, iconSolid: RectangleStackSolid },
         { to: '/library/liked', label: 'Liked Songs', icon: HeartIcon, iconSolid: HeartSolid },
-        { to: '/library/recent', label: 'Recently Played', icon: ClockIcon, iconSolid: ClockSolid },
+        { to: '/recently-played', label: 'Recently Played', icon: ClockIcon, iconSolid: ClockSolid },
       ]
     : [];
 
