@@ -59,7 +59,7 @@ function App() {
       <Router>
         <div className="App">
           <Routes>
-            {/* Public Routes */}
+            {/* Auth Routes (redirect if already logged in) */}
             <Route
               path="/login"
               element={
@@ -77,25 +77,48 @@ function App() {
               }
             />
 
-            {/* Protected Routes */}
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <MainLayout />
-                </ProtectedRoute>
-              }
-            >
+            {/* Public Routes - Accessible to everyone (guests and logged in users) */}
+            <Route path="/" element={<MainLayout />}>
               <Route index element={<Home />} />
               <Route path="search" element={<Search />} />
               <Route path="browse" element={<Browse />} />
-              <Route path="library" element={<Library />} />
-              <Route path="recently-played" element={<RecentlyPlayed />} />
               <Route path="artist/:id" element={<Artist />} />
               <Route path="album/:id" element={<Album />} />
               <Route path="song/:id" element={<Song />} />
-              <Route path="playlist/:id" element={<Playlist />} />
-              <Route path="profile" element={<Profile />} />
+
+              {/* Protected Routes - Require authentication */}
+              <Route
+                path="library"
+                element={
+                  <ProtectedRoute>
+                    <Library />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="recently-played"
+                element={
+                  <ProtectedRoute>
+                    <RecentlyPlayed />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="playlist/:id"
+                element={
+                  <ProtectedRoute>
+                    <Playlist />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="profile"
+                element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              />
             </Route>
 
             {/* Catch all - redirect to home */}
