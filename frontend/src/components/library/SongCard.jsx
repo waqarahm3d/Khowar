@@ -2,12 +2,15 @@ import { PlayIcon, PauseIcon, MusicalNoteIcon, EllipsisHorizontalIcon } from '@h
 import { HeartIcon as HeartOutline } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolid } from '@heroicons/react/24/solid';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getFileUrl, formatTime } from '../../utils/formatTime';
 import usePlayerStore from '../../store/playerStore';
 import useAuthStore from '../../store/authStore';
 import { songsAPI } from '../../api/songs';
+import AddToPlaylistModal from '../modals/AddToPlaylistModal';
 
 const SongCard = ({ song, onPlay }) => {
+  const navigate = useNavigate();
   const { currentSong, isPlaying, playSong, pause } = usePlayerStore();
   const { isAuthenticated, user } = useAuthStore();
 
@@ -15,6 +18,7 @@ const SongCard = ({ song, onPlay }) => {
     song?.likes?.includes(user?._id || user?.id) || false
   );
   const [showMenu, setShowMenu] = useState(false);
+  const [showAddToPlaylist, setShowAddToPlaylist] = useState(false);
 
   const isCurrentSong = currentSong?._id === song._id || currentSong?.id === song.id;
   const isCurrentlyPlaying = isCurrentSong && isPlaying;
@@ -122,16 +126,90 @@ const SongCard = ({ song, onPlay }) => {
         </div>
 
         {/* Menu button */}
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            setShowMenu(!showMenu);
-          }}
-          className="p-1.5 rounded-full hover:bg-spotify-black hover:bg-opacity-50 transition opacity-0 group-hover:opacity-100"
-        >
-          <EllipsisHorizontalIcon className="w-4 h-4 text-spotify-text-subdued" />
-        </button>
+        <div className="relative">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowMenu(!showMenu);
+            }}
+            className="p-1.5 rounded-full hover:bg-spotify-black hover:bg-opacity-50 transition opacity-0 group-hover:opacity-100"
+          >
+            <EllipsisHorizontalIcon className="w-4 h-4 text-spotify-text-subdued" />
+          </button>
+
+          {/* Dropdown Menu */}
+          {showMenu && (
+            <>
+              <div
+                className="fixed inset-0 z-10"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowMenu(false);
+                }}
+              />
+              <div className="absolute right-0 bottom-full mb-2 w-48 bg-spotify-elevated border border-spotify-hover rounded-md shadow-lg z-20">
+                <div className="py-1">
+                  {isAuthenticated && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowMenu(false);
+                        setShowAddToPlaylist(true);
+                      }}
+                      className="w-full text-left px-4 py-2 text-sm text-spotify-text hover:bg-spotify-hover transition"
+                    >
+                      Add to playlist
+                    </button>
+                  )}
+                  {song.artist && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowMenu(false);
+                        navigate(`/artist/${song.artist._id || song.artist.id || song.artist}`);
+                      }}
+                      className="w-full text-left px-4 py-2 text-sm text-spotify-text hover:bg-spotify-hover transition"
+                    >
+                      Go to artist
+                    </button>
+                  )}
+                  {song.album && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowMenu(false);
+                        navigate(`/album/${song.album._id || song.album.id || song.album}`);
+                      }}
+                      className="w-full text-left px-4 py-2 text-sm text-spotify-text hover:bg-spotify-hover transition"
+                    >
+                      Go to album
+                    </button>
+                  )}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowMenu(false);
+                      navigator.clipboard.writeText(window.location.origin + `/song/${song._id || song.id}`);
+                      alert('Link copied to clipboard!');
+                    }}
+                    className="w-full text-left px-4 py-2 text-sm text-spotify-text hover:bg-spotify-hover transition"
+                  >
+                    Share
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
       </div>
+
+      {/* Add to Playlist Modal */}
+      {showAddToPlaylist && (
+        <AddToPlaylistModal
+          song={song}
+          onClose={() => setShowAddToPlaylist(false)}
+        />
+      )}
     </div>
   );
 };
