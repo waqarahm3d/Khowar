@@ -26,10 +26,16 @@ client.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Unauthorized - clear token and redirect to login
-      Cookies.remove(AUTH_TOKEN_KEY);
-      if (window.location.pathname !== '/login') {
-        window.location.href = '/login';
+      const token = Cookies.get(AUTH_TOKEN_KEY);
+      // Only redirect if user was actually logged in (had a token)
+      // Don't redirect guests who get 401 from optional auth endpoints
+      if (token) {
+        Cookies.remove(AUTH_TOKEN_KEY);
+        // Only redirect if not already on auth pages
+        const authPages = ['/login', '/register'];
+        if (!authPages.includes(window.location.pathname)) {
+          window.location.href = '/login';
+        }
       }
     }
     return Promise.reject(error);
