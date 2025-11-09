@@ -35,7 +35,7 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 md:left-64 bg-white border-b border-gray-200 z-20">
+    <header className="sticky top-0 left-0 right-0 bg-white border-b border-gray-200 z-20">
       <div className="flex items-center justify-between px-4 py-3">
         {/* Left: Navigation */}
         <div className="flex items-center gap-3">

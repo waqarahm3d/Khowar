@@ -10,30 +10,32 @@ export default function MainLayout() {
   const { isQueueOpen } = useUIStore();
 
   return (
-    <div className="h-screen flex flex-col bg-black">
+    <div className="h-screen flex flex-col bg-gray-50">
       <div className="flex-1 flex overflow-hidden">
-        {/* Sidebar */}
+        {/* Sidebar - hidden on mobile, fixed on desktop */}
         <Sidebar />
 
-        {/* Main Content */}
-        <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Main Content - takes full width on mobile, offset by sidebar on desktop */}
+        <div className="flex-1 flex flex-col overflow-hidden md:ml-64">
           {/* Header */}
           <Header />
 
-          {/* Page Content */}
-          <main className="flex-1 overflow-y-auto bg-gradient-to-b from-primary-900/20 to-black">
-            <Outlet />
+          {/* Page Content with proper padding */}
+          <main className="flex-1 overflow-y-auto bg-gray-50 pb-20 md:pb-24">
+            <div className="container mx-auto px-4 py-6 max-w-7xl">
+              <Outlet />
+            </div>
           </main>
         </div>
 
         {/* Queue Sidebar */}
-        <Queue />
+        {isQueueOpen && <Queue />}
       </div>
 
-      {/* Player */}
+      {/* Player - fixed at bottom */}
       <Player />
 
-      {/* Mobile Navigation */}
+      {/* Mobile Navigation - only on mobile */}
       <MobileNav />
     </div>
   );
