@@ -67,9 +67,9 @@ const Header = () => {
           </div>
         </div>
 
-        {/* Center: Search */}
-        <div className="flex-1 max-w-2xl mx-4">
-          <form onSubmit={handleSearch} className="relative">
+        {/* Center: Search (hidden on mobile, visible on desktop) */}
+        <div className="hidden md:flex flex-1 max-w-2xl mx-4">
+          <form onSubmit={handleSearch} className="relative w-full">
             <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-spotify-text-subdued" />
             <input
               type="text"
@@ -169,7 +169,7 @@ const Header = () => {
               </Link>
               <Link
                 to="/register"
-                className="px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primary-dark rounded-full transition"
+                className="px-4 py-2 text-sm font-medium text-black bg-primary hover:bg-primary-light hover:scale-105 rounded-full transition transform"
               >
                 Sign up
               </Link>

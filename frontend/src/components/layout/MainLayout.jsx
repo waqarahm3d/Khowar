@@ -15,8 +15,8 @@ export default function MainLayout() {
         {/* Sidebar - hidden on mobile, fixed on desktop */}
         <Sidebar />
 
-        {/* Main Content - takes full width on mobile, offset by sidebar on desktop */}
-        <div className="flex-1 flex flex-col overflow-hidden md:ml-64">
+        {/* Main Content - takes full width on mobile, flexes next to sidebar on desktop */}
+        <div className="flex-1 flex flex-col overflow-hidden">
           {/* Header */}
           <Header />
 
