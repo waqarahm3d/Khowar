@@ -322,7 +322,7 @@ exports.unlikeSong = async (req, res) => {
 
 // @desc    Record play history
 // @route   POST /api/songs/:id/play
-// @access  Private
+// @access  Public (with optional auth)
 exports.recordPlay = async (req, res) => {
   try {
     const song = await Song.findById(req.params.id);
@@ -338,13 +338,15 @@ exports.recordPlay = async (req, res) => {
     song.playCount += 1;
     await song.save();
 
-    // Record in play history
-    await PlayHistory.create({
-      user: req.user._id,
-      song: song._id,
-      duration: req.body.duration || song.duration,
-      completedPercentage: req.body.completedPercentage || 100
-    });
+    // Record in play history only if user is authenticated
+    if (req.user) {
+      await PlayHistory.create({
+        user: req.user._id,
+        song: song._id,
+        duration: req.body.duration || song.duration,
+        completedPercentage: req.body.completedPercentage || 100
+      });
+    }
 
     res.json({
       success: true,
