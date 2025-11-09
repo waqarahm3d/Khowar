@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useMutation } from '@antml:react-query';
+import { useMutation } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
 import useAuthStore from '../store/authStore';
 import Button from '../components/common/Button';
