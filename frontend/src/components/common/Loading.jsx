@@ -48,7 +48,7 @@ const Loading = ({ fullScreen = false, size = 'md', text = '' }) => {
 
       {/* Loading text */}
       {text && (
-        <p className={`${textSizeClasses[size]} text-gray-600 font-medium`}>
+        <p className={`${textSizeClasses[size]} text-spotify-text-subdued font-medium`}>
           {text}
         </p>
       )}
@@ -57,7 +57,7 @@ const Loading = ({ fullScreen = false, size = 'md', text = '' }) => {
 
   if (fullScreen) {
     return (
-      <div className="fixed inset-0 bg-white bg-opacity-90 flex items-center justify-center z-50">
+      <div className="fixed inset-0 bg-spotify-bg bg-opacity-95 flex items-center justify-center z-50">
         <LoadingSpinner />
       </div>
     );

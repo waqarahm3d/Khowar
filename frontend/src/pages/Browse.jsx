@@ -44,11 +44,11 @@ export default function Browse() {
 
   return (
     <div className="px-4 md:px-8 py-6 pb-32 md:pb-24">
-      <h1 className="text-3xl md:text-4xl font-bold text-white mb-8">Browse</h1>
+      <h1 className="text-3xl md:text-4xl font-bold text-spotify-text mb-8">Browse</h1>
 
       {/* Categories */}
       <section className="mb-12">
-        <h2 className="text-2xl font-bold text-white mb-6">Categories</h2>
+        <h2 className="text-2xl font-bold text-spotify-text mb-6">Categories</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {[
             { name: 'Folk Music', color: 'bg-green-600' },
@@ -73,7 +73,7 @@ export default function Browse() {
       {/* All Songs */}
       {songs?.data && songs.data.length > 0 && (
         <section className="mb-12">
-          <h2 className="text-2xl font-bold text-white mb-6">All Songs</h2>
+          <h2 className="text-2xl font-bold text-spotify-text mb-6">All Songs</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {songs.data.map((song) => (
               <SongCard
@@ -89,7 +89,7 @@ export default function Browse() {
       {/* All Artists */}
       {artists?.data && artists.data.length > 0 && (
         <section className="mb-12">
-          <h2 className="text-2xl font-bold text-white mb-6">All Artists</h2>
+          <h2 className="text-2xl font-bold text-spotify-text mb-6">All Artists</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
             {artists.data.map((artist) => (
               <ArtistCard key={artist._id} artist={artist} />
@@ -101,7 +101,7 @@ export default function Browse() {
       {/* All Albums */}
       {albums?.data && albums.data.length > 0 && (
         <section className="mb-12">
-          <h2 className="text-2xl font-bold text-white mb-6">All Albums</h2>
+          <h2 className="text-2xl font-bold text-spotify-text mb-6">All Albums</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
             {albums.data.map((album) => (
               <AlbumCard key={album._id} album={album} />

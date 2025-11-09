@@ -43,20 +43,20 @@ export default function RecentlyPlayed() {
 
   return (
     <div className="pb-32 md:pb-24">
-      <div className="bg-gradient-to-b from-purple-800 to-black px-4 md:px-8 py-12">
+      <div className="bg-gradient-to-b from-primary to-spotify-bg px-4 md:px-8 py-12">
         <div className="flex items-end gap-6 max-w-7xl">
-          <div className="w-48 h-48 md:w-64 md:h-64 bg-gradient-to-br from-purple-600 to-purple-800 rounded-lg shadow-2xl flex items-center justify-center">
-            <ClockIcon className="w-24 h-24 md:w-32 md:h-32 text-white" />
+          <div className="w-48 h-48 md:w-64 md:h-64 bg-gradient-to-br from-primary to-primary-dark rounded-lg shadow-2xl flex items-center justify-center">
+            <ClockIcon className="w-24 h-24 md:w-32 md:h-32 text-black" />
           </div>
           <div className="flex-1">
-            <p className="text-sm font-semibold text-white mb-2">YOUR LIBRARY</p>
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
+            <p className="text-sm font-semibold text-spotify-text mb-2">YOUR LIBRARY</p>
+            <h1 className="text-4xl md:text-6xl font-bold text-spotify-text mb-4">
               Recently Played
             </h1>
-            <p className="text-gray-300 mb-2">
+            <p className="text-spotify-text-subdued mb-2">
               Your listening history from most recent to oldest
             </p>
-            <div className="flex items-center gap-2 text-white">
+            <div className="flex items-center gap-2 text-spotify-text">
               <span>{uniqueSongs.length} songs</span>
             </div>
           </div>
@@ -68,9 +68,9 @@ export default function RecentlyPlayed() {
           <SongList songs={uniqueSongs} onPlay={handlePlaySong} />
         ) : (
           <div className="text-center py-12">
-            <ClockIcon className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400 text-lg">No listening history yet</p>
-            <p className="text-gray-500 text-sm mt-2">
+            <ClockIcon className="w-16 h-16 text-spotify-text-subdued mx-auto mb-4" />
+            <p className="text-spotify-text-subdued text-lg">No listening history yet</p>
+            <p className="text-spotify-text-subdued text-sm mt-2">
               Songs you play will appear here
             </p>
           </div>

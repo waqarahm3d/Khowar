@@ -68,18 +68,18 @@ export default function Playlist() {
 
   return (
     <div className="pb-32 md:pb-24">
-      <div className="bg-gradient-to-b from-blue-800 to-black px-4 md:px-8 py-12">
+      <div className="bg-gradient-to-b from-primary to-spotify-bg px-4 md:px-8 py-12">
         <div className="flex flex-col md:flex-row items-start md:items-end gap-6 max-w-7xl">
-          <div className="w-48 h-48 md:w-64 md:h-64 bg-gradient-to-br from-primary-600 to-primary-800 rounded-lg shadow-2xl flex items-center justify-center">
+          <div className="w-48 h-48 md:w-64 md:h-64 bg-gradient-to-br from-primary to-primary-dark rounded-lg shadow-2xl flex items-center justify-center">
             <span className="text-8xl">🎵</span>
           </div>
           <div className="flex-1">
-            <p className="text-sm font-semibold text-white mb-2">PLAYLIST</p>
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
+            <p className="text-sm font-semibold text-spotify-text mb-2">PLAYLIST</p>
+            <h1 className="text-4xl md:text-6xl font-bold text-spotify-text mb-4">
               {playlistData?.name}
             </h1>
-            <p className="text-gray-300 mb-2">{playlistData?.description}</p>
-            <div className="flex items-center gap-2 text-white">
+            <p className="text-spotify-text-subdued mb-2">{playlistData?.description}</p>
+            <div className="flex items-center gap-2 text-spotify-text">
               <span className="font-semibold">{playlistData?.creator?.displayName}</span>
               <span>•</span>
               <span>{playlistData?.songs?.length} songs</span>
@@ -88,18 +88,18 @@ export default function Playlist() {
         </div>
       </div>
 
-      <div className="px-4 md:px-8 py-6 bg-black/20 backdrop-blur-sm">
+      <div className="px-4 md:px-8 py-6 bg-spotify-bg/60 backdrop-blur-sm">
         <div className="flex items-center gap-4">
           <Button
             onClick={handlePlayAll}
-            className="bg-primary-600 hover:bg-primary-700 text-white font-semibold px-8 py-3 rounded-full"
+            className="bg-primary hover:bg-primary-light hover:scale-105 text-black font-bold px-8 py-3 rounded-full transform transition shadow-lg"
           >
             Play
           </Button>
           {isAuthenticated && !isOwner && (
             <Button
               onClick={() => isFollowing ? unfollowMutation.mutate() : followMutation.mutate()}
-              className="border-2 border-white/20 hover:border-white/40 text-white font-semibold px-8 py-3 rounded-full"
+              className="border border-spotify-text-gray hover:border-spotify-text text-spotify-text font-semibold px-8 py-3 rounded-full transition"
             >
               {isFollowing ? 'Following' : 'Follow'}
             </Button>
@@ -107,7 +107,7 @@ export default function Playlist() {
           {isAuthenticated && isOwner && (
             <Button
               onClick={() => setIsEditModalOpen(true)}
-              className="border-2 border-white/20 hover:border-white/40 text-white font-semibold px-4 py-3 rounded-full flex items-center gap-2"
+              className="border border-spotify-text-gray hover:border-spotify-text text-spotify-text font-semibold px-4 py-3 rounded-full flex items-center gap-2 transition"
             >
               <PencilIcon className="w-5 h-5" />
               Edit
@@ -120,7 +120,7 @@ export default function Playlist() {
         {playlistData?.songs && playlistData.songs.length > 0 ? (
           <SongList songs={playlistData.songs} onPlay={handlePlaySong} />
         ) : (
-          <p className="text-gray-400 text-center py-12">No songs in this playlist</p>
+          <p className="text-spotify-text-subdued text-center py-12">No songs in this playlist</p>
         )}
       </div>
 

@@ -82,30 +82,32 @@ export default function Artist() {
     <div className="pb-32 md:pb-24">
       {/* Hero Section */}
       <div
-        className="relative h-80 md:h-96 bg-gradient-to-b from-primary-600 to-primary-900"
+        className="relative h-80 md:h-96 bg-gradient-to-b from-primary to-spotify-bg"
         style={{
-          backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.8)), url(${artistData?.profileImage})`,
+          backgroundImage: artistData?.profileImage ? `linear-gradient(to bottom, rgba(18,18,18,0.4), rgba(18,18,18,0.9)), url(${artistData.profileImage})` : undefined,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
       >
         <div className="absolute bottom-0 left-0 right-0 px-4 md:px-8 pb-6">
           <div className="flex items-end gap-6">
-            <img
-              src={artistData?.profileImage}
-              alt={artistData?.name}
-              className="w-32 h-32 md:w-48 md:h-48 rounded-full border-4 border-black shadow-2xl"
-            />
+            {artistData?.profileImage && (
+              <img
+                src={artistData.profileImage}
+                alt={artistData.name}
+                className="w-32 h-32 md:w-48 md:h-48 rounded-full border-4 border-spotify-black shadow-2xl"
+              />
+            )}
             <div className="flex-1">
-              <p className="text-sm font-semibold text-white mb-2">ARTIST</p>
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-4 flex items-center gap-3">
+              <p className="text-sm font-semibold text-spotify-text mb-2">ARTIST</p>
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-spotify-text mb-4 flex items-center gap-3">
                 {artistData?.name}
                 {artistData?.verified && (
-                  <CheckBadgeIcon className="w-8 h-8 md:w-12 md:h-12 text-primary-400" />
+                  <CheckBadgeIcon className="w-8 h-8 md:w-12 md:h-12 text-primary" />
                 )}
               </h1>
-              <p className="text-white text-lg">
-                {artistData?.followers?.toLocaleString()} followers
+              <p className="text-spotify-text text-lg">
+                {artistData?.followers?.toLocaleString() || 0} followers
               </p>
             </div>
           </div>
@@ -113,18 +115,18 @@ export default function Artist() {
       </div>
 
       {/* Actions */}
-      <div className="px-4 md:px-8 py-6 bg-black/20 backdrop-blur-sm">
+      <div className="px-4 md:px-8 py-6 bg-spotify-bg/60 backdrop-blur-sm">
         <div className="flex items-center gap-4">
           <Button
             onClick={handlePlayAll}
-            className="bg-primary-600 hover:bg-primary-700 text-white font-semibold px-8 py-3 rounded-full"
+            className="bg-primary hover:bg-primary-light hover:scale-105 text-black font-bold px-8 py-3 rounded-full transform transition shadow-lg"
           >
             Play
           </Button>
           {isAuthenticated && (
             <Button
               onClick={() => isFollowing ? unfollowMutation.mutate() : followMutation.mutate()}
-              className="border-2 border-white/20 hover:border-white/40 text-white font-semibold px-8 py-3 rounded-full"
+              className="border border-spotify-text-gray hover:border-spotify-text text-spotify-text font-semibold px-8 py-3 rounded-full transition"
             >
               {isFollowing ? 'Following' : 'Follow'}
             </Button>
@@ -136,15 +138,15 @@ export default function Artist() {
         {/* Bio */}
         {artistData?.bio && (
           <div className="mb-12">
-            <h2 className="text-2xl font-bold text-white mb-4">About</h2>
-            <p className="text-gray-300 text-lg leading-relaxed max-w-4xl">{artistData.bio}</p>
+            <h2 className="text-2xl font-bold text-spotify-text mb-4">About</h2>
+            <p className="text-spotify-text-subdued text-lg leading-relaxed max-w-4xl">{artistData.bio}</p>
           </div>
         )}
 
         {/* Popular Songs */}
         {songs?.data && songs.data.length > 0 && (
           <section className="mb-12">
-            <h2 className="text-2xl font-bold text-white mb-6">Popular</h2>
+            <h2 className="text-2xl font-bold text-spotify-text mb-6">Popular</h2>
             <SongList songs={songs.data.slice(0, 10)} onPlay={handlePlaySong} />
           </section>
         )}
@@ -152,7 +154,7 @@ export default function Artist() {
         {/* Albums */}
         {albums?.data && albums.data.length > 0 && (
           <section>
-            <h2 className="text-2xl font-bold text-white mb-6">Albums</h2>
+            <h2 className="text-2xl font-bold text-spotify-text mb-6">Albums</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
               {albums.data.map((album) => (
                 <AlbumCard key={album._id} album={album} />

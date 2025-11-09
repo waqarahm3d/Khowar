@@ -34,11 +34,11 @@ export default function Library() {
     return (
       <div className="flex items-center justify-center min-h-screen px-4">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-white mb-4">Your Library</h2>
-          <p className="text-gray-400 mb-6">Log in to see your saved songs, playlists, and more</p>
+          <h2 className="text-2xl font-bold text-spotify-text mb-4">Your Library</h2>
+          <p className="text-spotify-text-subdued mb-6">Log in to see your saved songs, playlists, and more</p>
           <a
             href="/login"
-            className="bg-primary-600 hover:bg-primary-700 text-white font-semibold px-8 py-3 rounded-full inline-block transition-colors"
+            className="bg-primary hover:bg-primary-light text-black font-semibold px-8 py-3 rounded-full inline-block transition-colors"
           >
             Log in
           </a>
@@ -59,7 +59,7 @@ export default function Library() {
 
   return (
     <div className="px-4 md:px-8 py-6 pb-32 md:pb-24">
-      <h1 className="text-3xl md:text-4xl font-bold text-white mb-8">Your Library</h1>
+      <h1 className="text-3xl md:text-4xl font-bold text-spotify-text mb-8">Your Library</h1>
 
       {/* Quick Access Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
@@ -95,10 +95,10 @@ export default function Library() {
       {playlists?.data && playlists.data.length > 0 && (
         <section>
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-white">Your Playlists</h2>
+            <h2 className="text-2xl font-bold text-spotify-text">Your Playlists</h2>
             <button
               onClick={() => setIsCreateModalOpen(true)}
-              className="bg-primary-600 hover:bg-primary-700 text-white font-semibold px-4 py-2 rounded-full transition-colors"
+              className="bg-primary hover:bg-primary-light text-black font-semibold px-4 py-2 rounded-full transition-colors"
             >
               Create Playlist
             </button>
@@ -114,10 +114,10 @@ export default function Library() {
       {/* Empty State */}
       {(!playlists?.data || playlists.data.length === 0) && (
         <div className="text-center py-12">
-          <p className="text-gray-400 mb-6">You don't have any playlists yet</p>
+          <p className="text-spotify-text-subdued mb-6">You don't have any playlists yet</p>
           <button
             onClick={() => setIsCreateModalOpen(true)}
-            className="bg-primary-600 hover:bg-primary-700 text-white font-semibold px-8 py-3 rounded-full transition-colors"
+            className="bg-primary hover:bg-primary-light text-black font-semibold px-8 py-3 rounded-full transition-colors"
           >
             Create Your First Playlist
           </button>

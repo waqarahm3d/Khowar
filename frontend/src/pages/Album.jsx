@@ -53,7 +53,7 @@ export default function Album() {
   return (
     <div className="pb-32 md:pb-24">
       {/* Hero Section */}
-      <div className="bg-gradient-to-b from-primary-800 to-black px-4 md:px-8 py-12">
+      <div className="bg-gradient-to-b from-primary to-spotify-bg px-4 md:px-8 py-12">
         <div className="flex flex-col md:flex-row items-start md:items-end gap-6 max-w-7xl">
           <img
             src={albumData?.coverImage}
@@ -61,11 +61,11 @@ export default function Album() {
             className="w-48 h-48 md:w-64 md:h-64 rounded-lg shadow-2xl"
           />
           <div className="flex-1">
-            <p className="text-sm font-semibold text-white mb-2">{albumData?.type?.toUpperCase() || 'ALBUM'}</p>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-4">
+            <p className="text-sm font-semibold text-spotify-text mb-2">{albumData?.type?.toUpperCase() || 'ALBUM'}</p>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-spotify-text mb-4">
               {albumData?.title}
             </h1>
-            <div className="flex items-center gap-2 text-white">
+            <div className="flex items-center gap-2 text-spotify-text">
               <a href={`/artist/${albumData?.artist?._id}`} className="font-semibold hover:underline">
                 {albumData?.artist?.name}
               </a>
@@ -81,11 +81,11 @@ export default function Album() {
       </div>
 
       {/* Actions */}
-      <div className="px-4 md:px-8 py-6 bg-black/20 backdrop-blur-sm">
+      <div className="px-4 md:px-8 py-6 bg-spotify-bg/60 backdrop-blur-sm">
         <div className="flex items-center gap-4">
           <Button
             onClick={handlePlayAll}
-            className="bg-primary-600 hover:bg-primary-700 text-white font-semibold px-8 py-3 rounded-full"
+            className="bg-primary hover:bg-primary-light hover:scale-105 text-black font-bold px-8 py-3 rounded-full transform transition shadow-lg"
           >
             Play
           </Button>
@@ -97,7 +97,7 @@ export default function Album() {
         {songs?.data && songs.data.length > 0 ? (
           <SongList songs={songs.data} onPlay={handlePlaySong} showAlbum={false} />
         ) : (
-          <p className="text-gray-400 text-center py-12">No songs in this album</p>
+          <p className="text-spotify-text-subdued text-center py-12">No songs in this album</p>
         )}
       </div>
 

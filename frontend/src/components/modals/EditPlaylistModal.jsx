@@ -68,13 +68,13 @@ export default function EditPlaylistModal({ isOpen, onClose, playlist }) {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
-      <div className="bg-gray-900 rounded-lg max-w-md w-full p-6">
+      <div className="bg-spotify-elevated rounded-lg max-w-md w-full p-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-white">Edit Playlist</h2>
+          <h2 className="text-2xl font-bold text-spotify-text">Edit Playlist</h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-white transition-colors"
+            className="text-spotify-text-subdued hover:text-spotify-text transition-colors"
           >
             <XMarkIcon className="w-6 h-6" />
           </button>
@@ -83,7 +83,7 @@ export default function EditPlaylistModal({ isOpen, onClose, playlist }) {
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-white mb-2">
+            <label className="block text-sm font-medium text-spotify-text mb-2">
               Name *
             </label>
             <Input
@@ -91,14 +91,14 @@ export default function EditPlaylistModal({ isOpen, onClose, playlist }) {
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               placeholder="My Awesome Playlist"
-              className="bg-white/10 border-white/20 text-white placeholder-gray-400"
+              className="bg-spotify-highlight border-spotify-text-gray text-spotify-text placeholder-spotify-text-subdued"
               maxLength={100}
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-white mb-2">
+            <label className="block text-sm font-medium text-spotify-text mb-2">
               Description (Optional)
             </label>
             <textarea
@@ -106,7 +106,7 @@ export default function EditPlaylistModal({ isOpen, onClose, playlist }) {
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               placeholder="Add a description..."
               rows={3}
-              className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="w-full px-4 py-2 bg-spotify-highlight border border-spotify-text-gray rounded-lg text-spotify-text placeholder-spotify-text-subdued focus:outline-none focus:ring-2 focus:ring-primary"
               maxLength={300}
             />
           </div>
@@ -117,9 +117,9 @@ export default function EditPlaylistModal({ isOpen, onClose, playlist }) {
               id="isPublic"
               checked={formData.isPublic}
               onChange={(e) => setFormData({ ...formData, isPublic: e.target.checked })}
-              className="w-4 h-4 text-primary-600 bg-white/10 border-white/20 rounded focus:ring-primary-500"
+              className="w-4 h-4 text-primary bg-spotify-highlight border-spotify-text-gray rounded focus:ring-primary"
             />
-            <label htmlFor="isPublic" className="ml-2 text-sm text-white">
+            <label htmlFor="isPublic" className="ml-2 text-sm text-spotify-text">
               Make this playlist public
             </label>
           </div>
@@ -128,14 +128,14 @@ export default function EditPlaylistModal({ isOpen, onClose, playlist }) {
             <Button
               type="button"
               onClick={onClose}
-              className="flex-1 bg-white/10 hover:bg-white/20 text-white font-semibold py-3 rounded-lg transition-colors"
+              className="flex-1 bg-spotify-hover hover:bg-spotify-text-gray text-spotify-text font-semibold py-3 rounded-lg transition-colors"
             >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={updateMutation.isPending}
-              className="flex-1 bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 rounded-lg transition-colors disabled:opacity-50"
+              className="flex-1 bg-primary hover:bg-primary-light text-black font-semibold py-3 rounded-lg transition-colors disabled:opacity-50"
             >
               {updateMutation.isPending ? 'Saving...' : 'Save'}
             </Button>
@@ -143,11 +143,11 @@ export default function EditPlaylistModal({ isOpen, onClose, playlist }) {
         </form>
 
         {/* Delete Button */}
-        <div className="mt-6 pt-6 border-t border-white/10">
+        <div className="mt-6 pt-6 border-t border-spotify-text-gray">
           <Button
             onClick={handleDelete}
             disabled={deleteMutation.isPending}
-            className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded-lg transition-colors disabled:opacity-50"
+            className="w-full bg-red-600 hover:bg-red-700 text-spotify-text font-semibold py-3 rounded-lg transition-colors disabled:opacity-50"
           >
             {deleteMutation.isPending ? 'Deleting...' : 'Delete Playlist'}
           </Button>
