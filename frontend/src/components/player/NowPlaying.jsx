@@ -45,7 +45,7 @@ const NowPlaying = ({ song, compact = false }) => {
   return (
     <div className={`flex items-center gap-3 ${compact ? 'max-w-[200px]' : 'max-w-[300px]'}`}>
       {/* Album Art */}
-      <div className={`${compact ? 'w-12 h-12' : 'w-14 h-14'} flex-shrink-0 bg-gray-100 rounded overflow-hidden`}>
+      <div className={`${compact ? 'w-12 h-12' : 'w-14 h-14'} flex-shrink-0 bg-spotify-hover rounded overflow-hidden shadow-md`}>
         {albumArtUrl ? (
           <img
             src={albumArtUrl}
@@ -53,34 +53,34 @@ const NowPlaying = ({ song, compact = false }) => {
             className="w-full h-full object-cover"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <MusicalNoteIcon className="w-6 h-6 text-gray-400" />
+          <div className="w-full h-full flex items-center justify-center bg-spotify-elevated">
+            <MusicalNoteIcon className="w-6 h-6 text-spotify-text-subdued" />
           </div>
         )}
       </div>
 
       {/* Song Info */}
       <div className="flex-1 min-w-0">
-        <div className={`font-medium text-gray-900 truncate ${compact ? 'text-sm' : 'text-base'}`}>
+        <div className={`font-medium text-spotify-text truncate ${compact ? 'text-sm' : 'text-sm'} hover:underline cursor-pointer`}>
           {song.title}
         </div>
-        <div className={`text-gray-600 truncate ${compact ? 'text-xs' : 'text-sm'}`}>
+        <div className={`text-spotify-text-subdued truncate ${compact ? 'text-xs' : 'text-xs'} hover:text-spotify-text hover:underline cursor-pointer`}>
           {artistName}
           {albumName && ` • ${albumName}`}
         </div>
       </div>
 
       {/* Like Button */}
-      {!compact && (
+      {!compact && isAuthenticated && (
         <button
           onClick={handleLike}
-          className="p-2 rounded-full hover:bg-gray-100 transition"
-          title={isLiked ? 'Unlike' : 'Like'}
+          className="p-2 rounded-full hover:bg-spotify-hover transition"
+          title={isLiked ? 'Remove from Liked Songs' : 'Save to Liked Songs'}
         >
           {isLiked ? (
             <HeartSolid className="w-5 h-5 text-primary" />
           ) : (
-            <HeartOutline className="w-5 h-5 text-gray-600" />
+            <HeartOutline className="w-5 h-5 text-spotify-text-subdued hover:text-spotify-text" />
           )}
         </button>
       )}

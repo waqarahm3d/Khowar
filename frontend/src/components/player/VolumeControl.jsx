@@ -22,7 +22,7 @@ const VolumeControl = () => {
       {/* Mute/Unmute Button */}
       <button
         onClick={toggleMute}
-        className="p-2 rounded-full hover:bg-gray-100 text-gray-700 transition"
+        className="p-2 rounded-full hover:bg-spotify-hover text-spotify-text-subdued hover:text-spotify-text transition"
         title={isMuted ? 'Unmute' : 'Mute'}
       >
         {displayVolume === 0 ? (
@@ -41,15 +41,15 @@ const VolumeControl = () => {
           step="0.01"
           value={displayVolume}
           onChange={handleVolumeChange}
-          className="w-full h-1 bg-gray-200 rounded-full appearance-none cursor-pointer slider"
+          className="w-full h-1 bg-spotify-text-gray rounded-full appearance-none cursor-pointer slider"
           style={{
-            background: `linear-gradient(to right, #fc5421 0%, #fc5421 ${displayVolume * 100}%, #e5e7eb ${displayVolume * 100}%, #e5e7eb 100%)`
+            background: `linear-gradient(to right, #FFFFFF 0%, #FFFFFF ${displayVolume * 100}%, #6A6A6A ${displayVolume * 100}%, #6A6A6A 100%)`
           }}
         />
       </div>
 
       {/* Volume Percentage */}
-      <span className={`text-xs text-gray-500 min-w-[30px] transition-opacity duration-300 ${isHovering ? 'opacity-100' : 'opacity-0'}`}>
+      <span className={`text-xs text-spotify-text-subdued min-w-[30px] transition-opacity duration-300 ${isHovering ? 'opacity-100' : 'opacity-0'}`}>
         {Math.round(displayVolume * 100)}%
       </span>
     </div>

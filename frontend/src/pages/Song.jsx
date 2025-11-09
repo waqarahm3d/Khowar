@@ -43,21 +43,23 @@ export default function Song() {
   if (!song) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
-        <p className="text-gray-400 text-lg mb-4">Song not found</p>
-        <Button onClick={() => navigate(-1)} className="bg-primary-600 hover:bg-primary-700 text-white px-6 py-2 rounded-lg">
+        <p className="text-spotify-text-subdued text-lg mb-4">Song not found</p>
+        <Button onClick={() => navigate(-1)} className="bg-primary hover:bg-primary-dark text-white px-6 py-2 rounded-full">
           Go Back
         </Button>
       </div>
     );
   }
 
+  const albumArtUrl = song.albumArt || song.album?.coverImage;
+
   return (
     <div className="pb-32 md:pb-24">
       {/* Header */}
-      <div className="bg-gradient-to-b from-blue-900 to-black px-4 md:px-8 py-8">
+      <div className="bg-gradient-to-b from-primary to-spotify-bg px-4 md:px-8 py-8">
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center gap-2 text-white hover:text-gray-300 mb-6 transition-colors"
+          className="flex items-center gap-2 text-spotify-text hover:text-spotify-text-subdued mb-6 transition-colors"
         >
           <ArrowLeftIcon className="w-5 h-5" />
           Back
@@ -65,8 +67,12 @@ export default function Song() {
 
         <div className="flex flex-col md:flex-row items-start md:items-end gap-6 max-w-7xl">
           {/* Album Art */}
-          <div className="w-48 h-48 md:w-64 md:h-64 bg-gradient-to-br from-primary-600 to-primary-800 rounded-lg shadow-2xl flex items-center justify-center flex-shrink-0">
-            <span className="text-6xl md:text-8xl">🎵</span>
+          <div className="w-48 h-48 md:w-64 md:h-64 bg-spotify-elevated rounded-lg shadow-2xl flex items-center justify-center flex-shrink-0 overflow-hidden">
+            {albumArtUrl ? (
+              <img src={albumArtUrl} alt={song.title} className="w-full h-full object-cover" />
+            ) : (
+              <span className="text-6xl md:text-8xl">🎵</span>
+            )}
           </div>
 
           {/* Song Info */}
@@ -105,23 +111,23 @@ export default function Song() {
       </div>
 
       {/* Actions */}
-      <div className="px-4 md:px-8 py-6 bg-black/20 backdrop-blur-sm">
+      <div className="px-4 md:px-8 py-6 bg-spotify-bg/60 backdrop-blur-sm">
         <div className="flex items-center gap-4">
           <Button
             onClick={handlePlay}
-            className="bg-primary-600 hover:bg-primary-700 text-white font-semibold px-8 py-3 rounded-full flex items-center gap-2"
+            className="bg-primary hover:bg-primary-light hover:scale-105 text-black font-bold px-8 py-3 rounded-full flex items-center gap-2 transform transition shadow-lg"
           >
-            <PlayIcon className="w-5 h-5" />
+            <PlayIcon className="w-6 h-6" />
             Play
           </Button>
           <button
-            className="p-3 rounded-full hover:bg-white/10 transition-colors"
-            title={isLiked ? 'Unlike' : 'Like'}
+            className="p-3 rounded-full hover:bg-spotify-hover transition-colors border border-spotify-text-gray"
+            title={isLiked ? 'Remove from Liked Songs' : 'Save to Liked Songs'}
           >
             {isLiked ? (
-              <HeartSolidIcon className="w-7 h-7 text-primary-600" />
+              <HeartSolidIcon className="w-7 h-7 text-primary" />
             ) : (
-              <HeartIcon className="w-7 h-7 text-white" />
+              <HeartIcon className="w-7 h-7 text-spotify-text-subdued hover:text-spotify-text" />
             )}
           </button>
         </div>
