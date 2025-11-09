@@ -282,3 +282,85 @@ exports.removeSongFromPlaylist = async (req, res) => {
     });
   }
 };
+
+// @desc    Follow playlist
+// @route   POST /api/playlists/:id/follow
+// @access  Private
+exports.followPlaylist = async (req, res) => {
+  try {
+    const User = require('../models/User');
+    const playlist = await Playlist.findById(req.params.id);
+
+    if (!playlist) {
+      return res.status(404).json({
+        success: false,
+        message: 'Playlist not found'
+      });
+    }
+
+    // Check if already following
+    const user = await User.findById(req.user._id);
+    if (user.followedPlaylists.includes(req.params.id)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Already following this playlist'
+      });
+    }
+
+    // Add to user's followed playlists
+    user.followedPlaylists.push(req.params.id);
+    await user.save();
+
+    // Increment playlist followers count
+    playlist.followers += 1;
+    await playlist.save();
+
+    res.json({
+      success: true,
+      message: 'Playlist followed successfully'
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+// @desc    Unfollow playlist
+// @route   DELETE /api/playlists/:id/follow
+// @access  Private
+exports.unfollowPlaylist = async (req, res) => {
+  try {
+    const User = require('../models/User');
+    const playlist = await Playlist.findById(req.params.id);
+
+    if (!playlist) {
+      return res.status(404).json({
+        success: false,
+        message: 'Playlist not found'
+      });
+    }
+
+    // Remove from user's followed playlists
+    const user = await User.findById(req.user._id);
+    user.followedPlaylists = user.followedPlaylists.filter(
+      id => id.toString() !== req.params.id
+    );
+    await user.save();
+
+    // Decrement playlist followers count
+    playlist.followers = Math.max(0, playlist.followers - 1);
+    await playlist.save();
+
+    res.json({
+      success: true,
+      message: 'Playlist unfollowed successfully'
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};

@@ -14,4 +14,7 @@ router.delete('/:id', protect, playlistController.deletePlaylist);
 router.post('/:id/songs', protect, playlistController.addSongToPlaylist);
 router.delete('/:id/songs/:songId', protect, playlistController.removeSongFromPlaylist);
 
+router.post('/:id/follow', protect, playlistController.followPlaylist);
+router.delete('/:id/follow', protect, playlistController.unfollowPlaylist);
+
 module.exports = router;

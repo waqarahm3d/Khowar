@@ -25,6 +25,8 @@ import Albums from './pages/Albums';
 import LikedSongs from './pages/LikedSongs';
 import Playlists from './pages/Playlists';
 import Settings from './pages/Settings';
+import VerifyEmail from './pages/VerifyEmail';
+import AuthCallback from './pages/AuthCallback';
 
 // Create Query Client
 const queryClient = new QueryClient({
@@ -81,6 +83,8 @@ function App() {
                 </PublicRoute>
               }
             />
+            <Route path="/verify-email/:token" element={<VerifyEmail />} />
+            <Route path="/auth/callback" element={<AuthCallback />} />
 
             {/* Public Routes - Accessible to everyone (guests and logged in users) */}
             <Route path="/" element={<MainLayout />}>
