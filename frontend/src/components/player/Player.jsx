@@ -35,15 +35,26 @@ const Player = () => {
     }
   }, [setAudioElement]);
 
+  // Load new song when currentSong changes
+  useEffect(() => {
+    if (!audioRef.current || !currentSong) return;
+
+    // Load the new audio source
+    audioRef.current.load();
+  }, [currentSong]);
+
   // Handle play/pause
   useEffect(() => {
     if (!audioRef.current || !currentSong) return;
 
     if (isPlaying) {
-      audioRef.current.play().catch((error) => {
-        console.error('Error playing audio:', error);
-        pause();
-      });
+      const playPromise = audioRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((error) => {
+          console.error('Error playing audio:', error);
+          pause();
+        });
+      }
     } else {
       audioRef.current.pause();
     }
@@ -68,6 +79,13 @@ const Player = () => {
     if (audioRef.current) {
       setDuration(audioRef.current.duration);
     }
+  };
+
+  // Handle audio error
+  const handleError = (e) => {
+    console.error('Audio error:', e);
+    console.error('Failed to load audio URL:', audioRef.current?.src);
+    pause();
   };
 
   // Handle song end
@@ -117,11 +135,13 @@ const Player = () => {
     <>
       {/* Hidden audio element */}
       <audio
+        key={currentSong._id || currentSong.id}
         ref={audioRef}
         src={audioUrl}
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
         onEnded={handleEnded}
+        onError={handleError}
         preload="metadata"
       />
 
