@@ -34,11 +34,11 @@ const ArtistCard = ({ artist }) => {
   return (
     <Link
       to={`/artists/${artist._id || artist.id}`}
-      className="group bg-white rounded-lg p-4 hover:bg-gray-50 transition cursor-pointer block"
+      className="group bg-spotify-elevated rounded-lg p-4 hover:bg-spotify-hover transition cursor-pointer block"
     >
       <div className="relative mb-3">
         {/* Artist Image (circular) */}
-        <div className="aspect-square bg-gray-100 rounded-full overflow-hidden">
+        <div className="aspect-square bg-spotify-bg rounded-full overflow-hidden shadow-lg">
           {imageUrl ? (
             <img
               src={imageUrl}
@@ -46,8 +46,8 @@ const ArtistCard = ({ artist }) => {
               className="w-full h-full object-cover"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center">
-              <UserCircleIcon className="w-16 h-16 text-gray-400" />
+            <div className="w-full h-full flex items-center justify-center bg-spotify-hover">
+              <UserCircleIcon className="w-16 h-16 text-spotify-text-subdued" />
             </div>
           )}
         </div>
@@ -62,13 +62,13 @@ const ArtistCard = ({ artist }) => {
 
       {/* Artist Info */}
       <div className="space-y-2 text-center">
-        <h3 className="font-semibold text-gray-900 truncate text-sm">
+        <h3 className="font-semibold text-spotify-text truncate text-sm">
           {artist.name}
         </h3>
 
-        <div className="text-xs text-gray-500">
+        <div className="text-xs text-spotify-text-subdued">
           {artist.verified && (
-            <span className="inline-block px-2 py-1 bg-primary bg-opacity-10 text-primary rounded-full font-medium mb-1">
+            <span className="inline-block px-2 py-1 bg-primary bg-opacity-20 text-primary rounded-full font-medium mb-1">
               ✓ Verified Artist
             </span>
           )}
@@ -90,10 +90,10 @@ const ArtistCard = ({ artist }) => {
         {isAuthenticated && (
           <button
             onClick={handleFollow}
-            className={`px-4 py-1.5 rounded-full text-sm font-medium transition ${
+            className={`px-4 py-1.5 rounded-full text-sm font-medium transition border ${
               isFollowing
-                ? 'bg-gray-200 text-gray-900 hover:bg-gray-300'
-                : 'bg-primary text-white hover:bg-primary-dark'
+                ? 'border-spotify-text-subdued text-spotify-text hover:border-spotify-text'
+                : 'bg-primary text-white hover:bg-primary-dark border-primary'
             }`}
           >
             {isFollowing ? 'Following' : 'Follow'}

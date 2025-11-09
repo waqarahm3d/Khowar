@@ -29,7 +29,7 @@ const MobileNav = () => {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-30 md:hidden pb-safe">
+    <nav className="fixed bottom-0 left-0 right-0 bg-spotify-black border-t border-spotify-elevated z-30 md:hidden pb-safe">
       <div className="flex items-center justify-around px-2 py-1">
         {navItems.map((item) => (
           <MobileNavLink key={item.to} {...item} />
@@ -45,7 +45,7 @@ const MobileNavLink = ({ to, label, icon: Icon, iconSolid: IconSolid }) => {
       to={to}
       className={({ isActive }) =>
         `flex flex-col items-center justify-center py-2 px-4 rounded-lg transition ${
-          isActive ? 'text-primary' : 'text-gray-600'
+          isActive ? 'text-spotify-text' : 'text-spotify-text-subdued'
         }`
       }
     >

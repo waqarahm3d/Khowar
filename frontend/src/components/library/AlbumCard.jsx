@@ -24,11 +24,11 @@ const AlbumCard = ({ album }) => {
   return (
     <Link
       to={`/albums/${album._id || album.id}`}
-      className="group bg-white rounded-lg p-4 hover:bg-gray-50 transition cursor-pointer block"
+      className="group bg-spotify-elevated rounded-lg p-4 hover:bg-spotify-hover transition cursor-pointer block"
     >
       <div className="relative mb-3">
         {/* Album Cover */}
-        <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
+        <div className="aspect-square bg-spotify-bg rounded-lg overflow-hidden shadow-lg">
           {coverUrl ? (
             <img
               src={coverUrl}
@@ -36,8 +36,8 @@ const AlbumCard = ({ album }) => {
               className="w-full h-full object-cover"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center">
-              <MusicalNoteIcon className="w-12 h-12 text-gray-400" />
+            <div className="w-full h-full flex items-center justify-center bg-spotify-hover">
+              <MusicalNoteIcon className="w-12 h-12 text-spotify-text-subdued" />
             </div>
           )}
         </div>
@@ -53,11 +53,11 @@ const AlbumCard = ({ album }) => {
 
       {/* Album Info */}
       <div className="space-y-1">
-        <h3 className="font-semibold text-gray-900 truncate text-sm">
+        <h3 className="font-semibold text-spotify-text truncate text-sm">
           {album.title}
         </h3>
-        <p className="text-sm text-gray-600 truncate">{artistName}</p>
-        <div className="flex items-center gap-2 text-xs text-gray-500">
+        <p className="text-sm text-spotify-text-subdued truncate">{artistName}</p>
+        <div className="flex items-center gap-2 text-xs text-spotify-text-gray">
           {album.releaseYear && <span>{album.releaseYear}</span>}
           {album.songs?.length > 0 && (
             <>

@@ -126,7 +126,7 @@ const Player = () => {
       />
 
       {/* Player UI - Fixed at bottom */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50">
+      <div className="fixed bottom-0 left-0 right-0 bg-spotify-elevated border-t border-spotify-hover shadow-lg z-50">
         <div className="px-4 py-3">
           <div className="max-w-screen-2xl mx-auto">
             {/* Mobile layout */}
@@ -137,8 +137,8 @@ const Player = () => {
                   <Controls compact />
                   <button
                     onClick={toggleQueue}
-                    className={`p-2 rounded-full hover:bg-gray-100 transition ${
-                      isQueueOpen ? 'text-primary-600' : 'text-gray-700'
+                    className={`p-2 rounded-full hover:bg-spotify-hover transition ${
+                      isQueueOpen ? 'text-primary' : 'text-spotify-text'
                     }`}
                     title="Queue"
                   >
@@ -167,8 +167,8 @@ const Player = () => {
                 <VolumeControl />
                 <button
                   onClick={toggleQueue}
-                  className={`p-2 rounded-full hover:bg-gray-100 transition ${
-                    isQueueOpen ? 'text-primary-600' : 'text-gray-700'
+                  className={`p-2 rounded-full hover:bg-spotify-hover transition ${
+                    isQueueOpen ? 'text-primary' : 'text-spotify-text'
                   }`}
                   title="Queue"
                 >

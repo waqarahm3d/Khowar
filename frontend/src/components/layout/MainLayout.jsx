@@ -10,7 +10,7 @@ export default function MainLayout() {
   const { isQueueOpen } = useUIStore();
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
+    <div className="h-screen flex flex-col bg-spotify-bg">
       <div className="flex-1 flex overflow-hidden">
         {/* Sidebar - hidden on mobile, fixed on desktop */}
         <Sidebar />
@@ -21,7 +21,7 @@ export default function MainLayout() {
           <Header />
 
           {/* Page Content with proper padding */}
-          <main className="flex-1 overflow-y-auto bg-gray-50 pb-20 md:pb-24">
+          <main className="flex-1 overflow-y-auto bg-spotify-bg pb-20 md:pb-24">
             <div className="container mx-auto px-4 py-6 max-w-7xl">
               <Outlet />
             </div>

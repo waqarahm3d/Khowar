@@ -35,34 +35,34 @@ const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 left-0 right-0 bg-white border-b border-gray-200 z-20">
+    <header className="sticky top-0 left-0 right-0 bg-spotify-black bg-opacity-90 backdrop-blur-md border-b border-spotify-elevated z-20">
       <div className="flex items-center justify-between px-4 py-3">
         {/* Left: Navigation */}
         <div className="flex items-center gap-3">
           {/* Mobile menu button */}
           <button
             onClick={toggleSidebar}
-            className="p-2 rounded-lg hover:bg-gray-100 transition md:hidden"
+            className="p-2 rounded-lg hover:bg-spotify-hover transition md:hidden"
             title="Menu"
           >
-            <Bars3Icon className="w-6 h-6 text-gray-700" />
+            <Bars3Icon className="w-6 h-6 text-spotify-text" />
           </button>
 
           {/* Back/Forward buttons */}
           <div className="hidden md:flex items-center gap-2">
             <button
               onClick={() => navigate(-1)}
-              className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition"
+              className="p-2 rounded-full bg-spotify-black bg-opacity-70 hover:bg-spotify-hover transition"
               title="Go back"
             >
-              <ChevronLeftIcon className="w-5 h-5 text-gray-700" />
+              <ChevronLeftIcon className="w-5 h-5 text-spotify-text" />
             </button>
             <button
               onClick={() => navigate(1)}
-              className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition"
+              className="p-2 rounded-full bg-spotify-black bg-opacity-70 hover:bg-spotify-hover transition"
               title="Go forward"
             >
-              <ChevronRightIcon className="w-5 h-5 text-gray-700" />
+              <ChevronRightIcon className="w-5 h-5 text-spotify-text" />
             </button>
           </div>
         </div>
@@ -70,13 +70,13 @@ const Header = () => {
         {/* Center: Search */}
         <div className="flex-1 max-w-2xl mx-4">
           <form onSubmit={handleSearch} className="relative">
-            <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-spotify-text-subdued" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search songs, artists, albums..."
-              className="w-full pl-10 pr-4 py-2 bg-gray-100 border border-gray-200 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition"
+              className="w-full pl-10 pr-4 py-2 bg-spotify-elevated border border-spotify-hover rounded-full text-sm text-spotify-text placeholder-spotify-text-subdued focus:outline-none focus:ring-2 focus:ring-primary focus:bg-spotify-hover transition"
             />
           </form>
         </div>
@@ -86,10 +86,10 @@ const Header = () => {
           {/* Notifications (placeholder) */}
           {isAuthenticated && (
             <button
-              className="p-2 rounded-full hover:bg-gray-100 transition relative"
+              className="p-2 rounded-full hover:bg-spotify-hover transition relative"
               title="Notifications"
             >
-              <BellIcon className="w-6 h-6 text-gray-700" />
+              <BellIcon className="w-6 h-6 text-spotify-text" />
               {/* Notification badge (example) */}
               {/* <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full" /> */}
             </button>
@@ -100,7 +100,7 @@ const Header = () => {
             <div className="relative">
               <button
                 onClick={() => setShowUserMenu(!showUserMenu)}
-                className="flex items-center gap-2 p-1 rounded-full hover:bg-gray-100 transition"
+                className="flex items-center gap-2 p-1 rounded-full hover:bg-spotify-hover transition"
               >
                 <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white font-semibold text-sm">
                   {user.username?.[0]?.toUpperCase() || 'U'}
@@ -114,12 +114,12 @@ const Header = () => {
                     className="fixed inset-0 z-10"
                     onClick={() => setShowUserMenu(false)}
                   />
-                  <div className="absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-lg z-20">
-                    <div className="p-4 border-b border-gray-200">
-                      <div className="font-medium text-gray-900">
+                  <div className="absolute right-0 mt-2 w-64 bg-spotify-elevated border border-spotify-hover rounded-lg shadow-lg z-20">
+                    <div className="p-4 border-b border-spotify-hover">
+                      <div className="font-medium text-spotify-text">
                         {user.displayName || user.username}
                       </div>
-                      <div className="text-sm text-gray-500">{user.email}</div>
+                      <div className="text-sm text-spotify-text-subdued">{user.email}</div>
                       {user.isPremium && (
                         <span className="inline-block mt-2 px-2 py-1 text-xs font-semibold bg-primary text-white rounded">
                           Premium
@@ -130,7 +130,7 @@ const Header = () => {
                     <div className="py-2">
                       <Link
                         to="/profile"
-                        className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition"
+                        className="flex items-center gap-3 px-4 py-2 text-sm text-spotify-text-subdued hover:bg-spotify-hover hover:text-spotify-text transition"
                         onClick={() => setShowUserMenu(false)}
                       >
                         <UserCircleIcon className="w-5 h-5" />
@@ -138,7 +138,7 @@ const Header = () => {
                       </Link>
                       <Link
                         to="/settings"
-                        className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition"
+                        className="flex items-center gap-3 px-4 py-2 text-sm text-spotify-text-subdued hover:bg-spotify-hover hover:text-spotify-text transition"
                         onClick={() => setShowUserMenu(false)}
                       >
                         <Cog6ToothIcon className="w-5 h-5" />
@@ -146,10 +146,10 @@ const Header = () => {
                       </Link>
                     </div>
 
-                    <div className="border-t border-gray-200 py-2">
+                    <div className="border-t border-spotify-hover py-2">
                       <button
                         onClick={handleLogout}
-                        className="flex items-center gap-3 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition"
+                        className="flex items-center gap-3 w-full px-4 py-2 text-sm text-spotify-text-subdued hover:bg-spotify-hover hover:text-spotify-text transition"
                       >
                         <ArrowRightOnRectangleIcon className="w-5 h-5" />
                         Log out
@@ -163,7 +163,7 @@ const Header = () => {
             <div className="flex items-center gap-2">
               <Link
                 to="/login"
-                className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition"
+                className="px-4 py-2 text-sm font-medium text-spotify-text-subdued hover:text-spotify-text transition"
               >
                 Log in
               </Link>

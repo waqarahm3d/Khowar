@@ -55,10 +55,10 @@ const SongCard = ({ song, onPlay }) => {
   };
 
   return (
-    <div className="group bg-white rounded-lg p-4 hover:bg-gray-50 transition cursor-pointer">
+    <div className="group bg-spotify-elevated rounded-lg p-4 hover:bg-spotify-hover transition cursor-pointer">
       <div className="relative mb-3">
         {/* Album Art */}
-        <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
+        <div className="aspect-square bg-spotify-bg rounded-lg overflow-hidden shadow-lg">
           {albumArtUrl ? (
             <img
               src={albumArtUrl}
@@ -66,8 +66,8 @@ const SongCard = ({ song, onPlay }) => {
               className="w-full h-full object-cover"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center">
-              <MusicalNoteIcon className="w-12 h-12 text-gray-400" />
+            <div className="w-full h-full flex items-center justify-center bg-spotify-hover">
+              <MusicalNoteIcon className="w-12 h-12 text-spotify-text-subdued" />
             </div>
           )}
         </div>
@@ -91,10 +91,10 @@ const SongCard = ({ song, onPlay }) => {
 
       {/* Song Info */}
       <div className="space-y-1">
-        <h3 className="font-semibold text-gray-900 truncate text-sm">
+        <h3 className="font-semibold text-spotify-text truncate text-sm">
           {song.title}
         </h3>
-        <p className="text-sm text-gray-600 truncate">{artistName}</p>
+        <p className="text-sm text-spotify-text-subdued truncate">{artistName}</p>
       </div>
 
       {/* Actions */}
@@ -104,19 +104,19 @@ const SongCard = ({ song, onPlay }) => {
           {isAuthenticated && (
             <button
               onClick={handleLike}
-              className="p-1.5 rounded-full hover:bg-gray-200 transition"
+              className="p-1.5 rounded-full hover:bg-spotify-black hover:bg-opacity-50 transition"
               title={isLiked ? 'Unlike' : 'Like'}
             >
               {isLiked ? (
                 <HeartSolid className="w-4 h-4 text-primary" />
               ) : (
-                <HeartOutline className="w-4 h-4 text-gray-600" />
+                <HeartOutline className="w-4 h-4 text-spotify-text-subdued" />
               )}
             </button>
           )}
 
           {/* Duration */}
-          <span className="text-xs text-gray-500">
+          <span className="text-xs text-spotify-text-gray">
             {formatTime(song.duration)}
           </span>
         </div>
@@ -127,9 +127,9 @@ const SongCard = ({ song, onPlay }) => {
             e.stopPropagation();
             setShowMenu(!showMenu);
           }}
-          className="p-1.5 rounded-full hover:bg-gray-200 transition opacity-0 group-hover:opacity-100"
+          className="p-1.5 rounded-full hover:bg-spotify-black hover:bg-opacity-50 transition opacity-0 group-hover:opacity-100"
         >
-          <EllipsisHorizontalIcon className="w-4 h-4 text-gray-600" />
+          <EllipsisHorizontalIcon className="w-4 h-4 text-spotify-text-subdued" />
         </button>
       </div>
     </div>
