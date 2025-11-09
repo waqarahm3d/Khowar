@@ -7,9 +7,8 @@ import { artistsAPI } from '../../api/artists';
 
 const ArtistCard = ({ artist }) => {
   const { isAuthenticated, user } = useAuthStore();
-  const [isFollowing, setIsFollowing] = useState(
-    artist?.followers?.includes(user?._id || user?.id) || false
-  );
+  // followers is a number (count), not an array - check if following via API if needed
+  const [isFollowing, setIsFollowing] = useState(false);
 
   const imageUrl = artist.image ? getFileUrl(artist.image) : null;
 
@@ -75,12 +74,12 @@ const ArtistCard = ({ artist }) => {
           )}
           <div className="flex items-center justify-center gap-2">
             {artist.totalSongs > 0 && <span>{artist.totalSongs} songs</span>}
-            {artist.followers?.length > 0 && (
+            {artist.followers > 0 && (
               <>
                 <span>•</span>
                 <span>
-                  {artist.followers.length.toLocaleString()} follower
-                  {artist.followers.length !== 1 ? 's' : ''}
+                  {artist.followers.toLocaleString()} follower
+                  {artist.followers !== 1 ? 's' : ''}
                 </span>
               </>
             )}
