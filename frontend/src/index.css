@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Spotify-style Dark Theme */
+@layer base {
+  :root {
+    /* Spotify Colors */
+    --color-spotify-green: #1DB954;
+    --color-spotify-green-dark: #1AA34A;
+    --color-spotify-green-light: #1ED760;
+    --color-bg-base: #121212;
+    --color-bg-elevated: #181818;
+    --color-bg-elevated-highlight: #1F1F1F;
+    --color-bg-elevated-hover: #282828;
+    --color-text-base: #FFFFFF;
+    --color-text-subdued: #B3B3B3;
+    --color-text-bright-accent: #FFFFFF;
+
+    /* Keep primary for compatibility */
+    --color-primary: #1DB954;
+    --color-primary-dark: #1AA34A;
+    --color-primary-light: #1ED760;
+  }
+
+  * {
+    @apply border-gray-700;
+  }
+
+  body {
+    @apply bg-[#121212] text-white font-sans antialiased;
+    font-family: 'Circular', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+  }
+}
+
+@layer components {
+  /* Custom scrollbar - Spotify style */
+  ::-webkit-scrollbar {
+    @apply w-3 h-3;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-600 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-500;
+  }
+}
+
+/* Animated blob background for auth pages */
+@keyframes blob {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+}
+
+@layer utilities {
+  .animate-blob {
+    animation: blob 7s infinite;
+  }
+
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+
+  /* Spotify card styles */
+  .spotify-card {
+    @apply bg-[#181818] rounded-md p-4 hover:bg-[#282828] transition-all duration-200 cursor-pointer;
+  }
+
+  .spotify-card-highlight {
+    @apply bg-[#282828];
+  }
+}

@@ -1,0 +1,187 @@
+import { useState, useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { useQuery, useMutation } from '@tanstack/react-query'
+import { getArtist, updateArtist, uploadImage } from '../services/api'
+import toast from 'react-hot-toast'
+import { ArrowLeft } from 'lucide-react'
+
+export default function EditArtist() {
+  const navigate = useNavigate()
+  const { id } = useParams()
+  const [formData, setFormData] = useState({
+    name: '',
+    bio: '',
+    profileImage: '',
+    genres: [],
+    verified: false,
+  })
+  const [uploading, setUploading] = useState(false)
+
+  // Fetch artist data
+  const { data: artistData, isLoading } = useQuery({
+    queryKey: ['artist', id],
+    queryFn: () => getArtist(id),
+  })
+
+  // Populate form when artist data is loaded
+  useEffect(() => {
+    if (artistData?.data?.data) {
+      const artist = artistData.data.data
+      setFormData({
+        name: artist.name,
+        bio: artist.bio || '',
+        profileImage: artist.profileImage || '',
+        genres: [artist.genres?.join(', ') || ''],
+        verified: artist.verified || false,
+      })
+    }
+  }, [artistData])
+
+  const updateMutation = useMutation({
+    mutationFn: (data) => updateArtist(id, data),
+    onSuccess: () => {
+      toast.success('Artist updated successfully!')
+      navigate('/artists')
+    },
+    onError: (error) => {
+      toast.error(error.response?.data?.message || 'Failed to update artist')
+    },
+  })
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+
+    setUploading(true)
+    try {
+      const response = await uploadImage(file)
+      setFormData(prev => ({ ...prev, profileImage: response.data.data.imageUrl }))
+      toast.success('Image uploaded successfully')
+    } catch (error) {
+      toast.error('Failed to upload image')
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+
+    const genreArray = formData.genres[0] ? formData.genres[0].split(',').map(g => g.trim()) : []
+
+    updateMutation.mutate({
+      ...formData,
+      genres: genreArray,
+    })
+  }
+
+  if (isLoading) {
+    return (
+      <div className="p-8">
+        <div className="text-center py-12">Loading artist...</div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="p-8">
+      <button
+        onClick={() => navigate('/artists')}
+        className="flex items-center text-gray-600 hover:text-gray-900 mb-6"
+      >
+        <ArrowLeft className="w-5 h-5 mr-2" />
+        Back to Artists
+      </button>
+
+      <h1 className="text-3xl font-bold text-gray-900 mb-8">Edit Artist</h1>
+
+      <form onSubmit={handleSubmit} className="max-w-2xl">
+        <div className="bg-white rounded-lg shadow p-6 space-y-6">
+          {/* Current Profile Image */}
+          {formData.profileImage && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Current Profile Image
+              </label>
+              <img
+                src={formData.profileImage}
+                alt="Profile"
+                className="w-32 h-32 rounded-full object-cover"
+              />
+            </div>
+          )}
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Profile Image (leave empty to keep current)
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              className="w-full"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Name *
+            </label>
+            <input
+              type="text"
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Bio
+            </label>
+            <textarea
+              value={formData.bio}
+              onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+              rows="4"
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Genres (comma-separated)
+            </label>
+            <input
+              type="text"
+              value={formData.genres[0] || ''}
+              onChange={(e) => setFormData({ ...formData, genres: [e.target.value] })}
+              placeholder="Pop, Rock, Jazz"
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500"
+            />
+          </div>
+
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              checked={formData.verified}
+              onChange={(e) => setFormData({ ...formData, verified: e.target.checked })}
+              className="mr-2"
+            />
+            <label className="text-sm font-medium text-gray-700">
+              Verified Artist
+            </label>
+          </div>
+
+          <button
+            type="submit"
+            disabled={uploading || updateMutation.isPending}
+            className="w-full bg-primary-600 text-white py-3 rounded-lg hover:bg-primary-700 disabled:opacity-50"
+          >
+            {uploading ? 'Uploading...' : updateMutation.isPending ? 'Updating...' : 'Update Artist'}
+          </button>
+        </div>
+      </form>
+    </div>
+  )
+}
