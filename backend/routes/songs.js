@@ -18,7 +18,7 @@ router.post('/:songId/comments', protect, commentController.createComment);
 // Protected routes
 router.post('/:id/like', protect, songController.likeSong);
 router.delete('/:id/like', protect, songController.unlikeSong);
-router.post('/:id/play', protect, songController.recordPlay);
+router.post('/:id/play', optionalAuth, songController.recordPlay); // Allow guests to play
 
 // Admin routes
 router.post('/', protect, authorize('admin'), songController.createSong);

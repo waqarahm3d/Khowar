@@ -40,15 +40,24 @@ exports.register = async (req, res) => {
       token: verificationToken
     });
 
-    // Send verification email
-    await emailService.sendVerificationEmail(email, verificationToken, displayName);
+    // Send verification email (non-blocking - don't fail registration if email fails)
+    let emailSent = false;
+    try {
+      await emailService.sendVerificationEmail(email, verificationToken, displayName);
+      emailSent = true;
+    } catch (emailError) {
+      console.error('Failed to send verification email:', emailError.message);
+      // Continue with registration even if email fails
+    }
 
     // Generate JWT token (but email needs to be verified to access most features)
     const token = generateToken(user._id);
 
     res.status(201).json({
       success: true,
-      message: 'Registration successful! Please check your email to verify your account.',
+      message: emailSent
+        ? 'Registration successful! Please check your email to verify your account.'
+        : 'Registration successful! Email verification is pending.',
       data: {
         _id: user._id,
         username: user.username,
