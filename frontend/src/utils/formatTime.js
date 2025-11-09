@@ -46,7 +46,9 @@ export const getFileUrl = (path) => {
 
   // Local file - construct URL
   const baseUrl = import.meta.env.VITE_API_URL.replace('/api', '');
-  return `${baseUrl}/${path}`;
+  // Remove leading slash from path if it exists to avoid double slashes
+  const cleanPath = path.startsWith('/') ? path.substring(1) : path;
+  return `${baseUrl}/${cleanPath}`;
 };
 
 /**
