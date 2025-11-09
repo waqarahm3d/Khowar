@@ -55,6 +55,8 @@ export const getFileUrl = (path) => {
  * Get audio stream URL
  */
 export const getAudioUrl = (songId) => {
-  const baseUrl = import.meta.env.VITE_API_URL.replace('/api', '');
-  return `${baseUrl}/api/songs/${songId}/stream`;
+  const apiUrl = import.meta.env.VITE_API_URL;
+  // Ensure the URL is properly formatted (no trailing slash)
+  const cleanApiUrl = apiUrl.endsWith('/') ? apiUrl.slice(0, -1) : apiUrl;
+  return `${cleanApiUrl}/songs/${songId}/stream`;
 };
